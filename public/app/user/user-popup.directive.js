@@ -1,8 +1,6 @@
-angular
-  .module('mage')
-  .directive('locationPopup', locationPopup);
+var moment = require('moment');
 
-function locationPopup() {
+module.exports = function locationPopup() {
   var directive = {
     restrict: "A",
     templateUrl:  "app/user/user-popup.directive.html",
@@ -15,7 +13,7 @@ function locationPopup() {
   };
 
   return directive;
-}
+};
 
 LocationPopupController.$inject = ['$scope', 'LocalStorageService'];
 

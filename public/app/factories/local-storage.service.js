@@ -1,7 +1,3 @@
-angular
-  .module('mage')
-  .factory('LocalStorageService', LocalStorageService);
-
 LocalStorageService.$inject = [];
 
 function LocalStorageService() {
@@ -55,12 +51,12 @@ function LocalStorageService() {
   function getTimeInterval() {
     var time = JSON.parse(getLocalItem(timeIntervalKey));
     if (time && time.options) {
-        if (time.options.startDate) {
-          time.options.startDate = new Date(time.options.startDate);
-        }
-        if (time.options.endDate) {
-          time.options.endDate = new Date(time.options.endDate);
-        }
+      if (time.options.startDate) {
+        time.options.startDate = new Date(time.options.startDate);
+      }
+      if (time.options.endDate) {
+        time.options.endDate = new Date(time.options.endDate);
+      }
     }
     return time;
   }
@@ -115,3 +111,5 @@ function LocalStorageService() {
     }
   }
 }
+
+module.exports = LocalStorageService;

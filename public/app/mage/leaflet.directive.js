@@ -1,17 +1,7 @@
-angular
-  .module('mage')
-  .directive('leaflet', leaflet);
-
-function leaflet() {
-  var directive = {
-    restrict: "A",
-    replace: true,
-    template: '<div id="map" class="leaflet-map"></div>',
-    controller: LeafletController
-  };
-
-  return directive;
-}
+var _ = require('underscore')
+  , L = require('leaflet')
+  , angular = require('angular')
+  , moment = require('moment');
 
 LeafletController.$inject = ['$rootScope', '$scope', '$interval', '$timeout', 'MapService', 'LocalStorageService', 'GeometryService'];
 
@@ -538,7 +528,7 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
       e.cancel();
     });
 
-    editLayer.on('editable:drawing:clicked', function(e) {
+    editLayer.on('editable:drawing:clicked', function() {
       if (GeometryService.featureHasIntersections(editLayer.toGeoJSON())) {
         editLayer.editor.pop();
       }
@@ -758,3 +748,14 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
     map.invalidateSize({pan: false});
   }
 }
+
+module.exports = function leaflet() {
+  var directive = {
+    restrict: "A",
+    replace: true,
+    template: '<div id="map" class="leaflet-map"></div>',
+    controller: LeafletController
+  };
+
+  return directive;
+};

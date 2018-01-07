@@ -1,21 +1,27 @@
+var _ = require('underscore')
+  , angular = require('angular');
+
 /* Fix for IE */
 if (!Date.now) { Date.now = function() { return +(new Date); }; }
 
 angular
-  .module("mage", [
-    "ui.bootstrap",
-    "ui.select",
-    "minicolors",
-    "ngAnimate",
-    "ngSanitize",
-    "ngRoute",
-    "ngResource",
-    "ngMessages",
-    "http-auth-interceptor",
-    "com.2fdevs.videogular",
-    "com.2fdevs.videogular.plugins.controls",
-    "com.2fdevs.videogular.plugins.overlayplay"
-  ]).config(config).run(run);
+  .module('mage')
+  .controller('FilterController', require('./filter/filter'))
+  .controller('NavController', require('./mage/mage-nav.controller'))
+  .controller('MageController', require('./mage/mage.controller'))
+  .controller('ExportController', require('./export/export'))
+  .controller('SigninController', require('./signin/signin.controller'))
+  .controller('SignupController', require('./signup/signup.controller'))
+  .controller('UserController', require('./user/user.controller'))
+  .controller('AboutController', require('./about/about.controller'))
+  .config(config)
+  .run(run);
+
+require('./mage');
+require('./filters');
+require('./user');
+require('./factories');
+require('./admin');
 
 config.$inject = ['$provide', '$httpProvider', '$routeProvider', '$animateProvider'];
 

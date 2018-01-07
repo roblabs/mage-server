@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('AdminTeamAccessController', AdminTeamAccessController);
+var _ = require('underscore');
 
 AdminTeamAccessController.$inject = ['$scope', '$location', '$routeParams', '$q', '$filter', 'Team', 'TeamAccess', 'UserService',];
 
@@ -82,3 +80,5 @@ function AdminTeamAccessController($scope, $location, $routeParams, $q, $filter,
     return filteredMembers && filteredMembers.length;
   };
 }
+
+module.exports = AdminTeamAccessController;

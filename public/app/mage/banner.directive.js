@@ -1,20 +1,3 @@
-angular
-  .module('mage')
-  .directive('banner', banner);
-
-function banner() {
-  var directive = {
-    restrict: "A",
-    scope: {
-      type: '@banner'
-    },
-    templateUrl: '/app/mage/banner.directive.html',
-    controller: BannerController
-  };
-
-  return directive;
-}
-
 BannerController.$inject = ['$scope', '$element', 'Settings'];
 
 function BannerController($scope, $element, Settings) {
@@ -42,3 +25,16 @@ function BannerController($scope, $element, Settings) {
     }
   });
 }
+
+module.exports = function banner() {
+  var directive = {
+    restrict: "A",
+    scope: {
+      type: '@banner'
+    },
+    templateUrl: '/app/mage/banner.directive.html',
+    controller: BannerController
+  };
+
+  return directive;
+};

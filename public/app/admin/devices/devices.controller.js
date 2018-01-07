@@ -1,6 +1,5 @@
-angular
-  .module('mage')
-  .controller('AdminDevicesController', AdminDevicesController);
+var _ = require('underscore')
+  , angular = require('angular');
 
 AdminDevicesController.$inject = ['$scope', '$uibModal', '$filter', '$location', 'LocalStorageService', 'DeviceService', 'UserService'];
 
@@ -126,3 +125,5 @@ function AdminDevicesController($scope, $uibModal, $filter, $location, LocalStor
     });
   };
 }
+
+module.exports = AdminDevicesController;

@@ -1,6 +1,5 @@
-angular
-  .module('mage')
-  .controller('AdminController', AdminController);
+var _ = require('underscore')
+  , moment = require('moment');
 
 AdminController.$inject = ['$scope', '$routeParams', '$location', '$filter', 'UserService', 'DeviceService', 'LoginService', 'Team', 'Event', 'Layer'];
 
@@ -202,3 +201,5 @@ function AdminController($scope, $routeParams, $location, $filter, UserService, 
     $scope.filterLogins();
   });
 }
+
+module.exports = AdminController;

@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('AdminUserEditController', AdminUserEditController);
+var angular = require('angular');
 
 AdminUserEditController.$inject = ['$scope', '$filter', '$routeParams', '$location', 'Api', 'LocalStorageService', 'UserService', 'UserIconService'];
 
@@ -192,3 +190,5 @@ function AdminUserEditController($scope, $filter, $routeParams, $location, Api, 
     });
   };
 }
+
+module.exports = AdminUserEditController;

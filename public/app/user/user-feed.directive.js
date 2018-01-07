@@ -1,8 +1,6 @@
-angular
-  .module('mage')
-  .directive('userNewsItem', userNewsItem);
+var moment = require('moment');
 
-function userNewsItem() {
+module.exports = function userNewsItem() {
   var directive = {
     restrict: "A",
     templateUrl:  "app/user/user-feed.directive.html",
@@ -14,7 +12,7 @@ function userNewsItem() {
   };
 
   return directive;
-}
+};
 
 UserNewsItemController.$inject = ['$scope', 'LocalStorageService'];
 

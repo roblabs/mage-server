@@ -1,7 +1,3 @@
-angular
-	.module('mage')
-	.factory('Location', Location);
-
 Location.$inject = ['$resource'];
 
 function Location($resource) {
@@ -20,3 +16,5 @@ function Location($resource) {
 
   return Location;
 }
+
+module.exports = Location;

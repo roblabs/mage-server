@@ -1,7 +1,3 @@
-angular
-  .module('mage')
-  .controller('AdminTeamEditController', AdminTeamEditController);
-
 AdminTeamEditController.$inject = ['$scope', '$location', '$routeParams', 'Team'];
 
 function AdminTeamEditController($scope, $location, $routeParams, Team) {
@@ -24,3 +20,5 @@ function AdminTeamEditController($scope, $location, $routeParams, Team) {
     $location.path(path);
   };
 }
+
+module.exports = AdminTeamEditController;

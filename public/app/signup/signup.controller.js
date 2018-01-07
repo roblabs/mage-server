@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('SignupController', SignupController);
+var _ = require('underscore');
 
 SignupController.$inject = ['$scope', '$location', 'UserService', 'Api'];
 
@@ -51,9 +49,9 @@ function SignupController($scope, $location, UserService, Api) {
   };
 
   $scope.signup = function(strategy) {
-    if (strategy == 'local') {
+    if (strategy === 'local') {
       localSignup();
-    } else if (strategy == 'google') {
+    } else if (strategy === 'google') {
       googleSignup();
     } else {
       oauthSignup(strategy);
@@ -95,7 +93,7 @@ function SignupController($scope, $location, UserService, Api) {
         });
       });
     });
-  }
+  };
 
   function oauthSignup(strategy) {
     UserService.oauthSignup(strategy).then(function() {
@@ -187,3 +185,5 @@ function SignupController($scope, $location, UserService, Api) {
     return name === 'local';
   }
 }
+
+module.exports = SignupController;

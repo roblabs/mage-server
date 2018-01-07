@@ -1,7 +1,3 @@
-angular
-  .module('mage')
-  .controller('AdminLayerEditController', AdminLayerEditController);
-
 AdminLayerEditController.$inject = ['$scope', '$location', '$routeParams', 'LocalStorageService', 'Layer'];
 
 function AdminLayerEditController($scope, $location, $routeParams, LocalStorageService, Layer) {
@@ -29,3 +25,5 @@ function AdminLayerEditController($scope, $location, $routeParams, LocalStorageS
     $location.path(path);
   };
 }
+
+module.exports = AdminLayerEditController;

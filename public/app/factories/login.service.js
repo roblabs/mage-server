@@ -1,6 +1,5 @@
-angular
-  .module('mage')
-  .factory('LoginService', LoginService);
+var $ = require('jquery')
+  , moment = require('moment');
 
 LoginService.$inject = ['$http'];
 
@@ -37,3 +36,5 @@ function LoginService($http) {
     return $http.get(options.url || '/api/logins?' + $.param(parameters));
   }
 }
+
+module.exports = LoginService;

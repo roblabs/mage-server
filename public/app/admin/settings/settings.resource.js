@@ -1,7 +1,3 @@
-angular
-	.module('mage')
-	.factory('Settings', Settings);
-
 Settings.$inject = ['$resource'];
 
 function Settings($resource) {
@@ -18,3 +14,5 @@ function Settings($resource) {
 
   return Settings;
 }
+
+module.exports = Settings;

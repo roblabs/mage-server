@@ -1,7 +1,3 @@
-angular
-	.module('mage')
-	.factory('Layer', Layer);
-
 Layer.$inject = ['$resource'];
 
 function Layer($resource) {
@@ -54,3 +50,5 @@ function Layer($resource) {
 
   return Layer;
 }
+
+module.exports = Layer;

@@ -1,0 +1,69 @@
+{
+  "name": "@ngageoint/mage-web",
+  "version": "5.0.0",
+  "description": "MAGE Web",
+  "keywords": [
+    "NGA",
+    "mage"
+  ],
+  "license": "Apache-2.0",
+  "author": {
+    "name": "NGA",
+    "url": "https://www.nga.mil"
+  },
+  "contributors": [
+    "Daniel Barela <daniel.barela@gmail.com>",
+    "Billy Newman <newmanw10@gmail.com>"
+  ],
+  "homepage": "http://ngageoint.github.io/MAGE/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ngageoint/mage-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ngageoint/mage-server/issues"
+  },
+  "scripts": {
+    "bundle": "webpack"
+  },
+  "dependencies": {
+    "@turf/center": "4.3.0",
+    "@turf/helpers": "4.3.0",
+    "@turf/kinks": "4.3.0",
+    "angular": "1.5.3",
+    "angular-animate": "1.5.3",
+    "angular-messages": "1.5.3",
+    "angular-minicolors": "0.0.7",
+    "angular-resource": "1.5.3",
+    "angular-route": "1.5.3",
+    "angular-sanitize": "1.5.3",
+    "angular-ui-bootstrap": "2.0.1",
+    "browserify": "14.3.0",
+    "exif-js": "2.1.1",
+    "font-awesome": "4.4.0",
+    "jquery": "1.12.4",
+    "jquery-file-download": "1.4.6",
+    "jquery-minicolors": "2.1.10",
+    "leaflet": "1.0.3",
+    "leaflet-geosearch": "1.0.0",
+    "leaflet-groupedlayercontrol": "0.6.0",
+    "leaflet.awesome-markers": "2.0.4",
+    "leaflet.markercluster": "1.0.3",
+    "moment": "2.9.0",
+    "papaparse": "4.1.4",
+    "ui-select": "0.17.1",
+    "underscore": "1.8.3",
+    "videogular": "1.4.4",
+    "videogular-controls": "1.4.4",
+    "videogular-overlay-play": "1.4.4",
+    "videogular-themes-default": "1.4.4",
+    "watchify": "3.9.0",
+    "webfontloader": "1.6.6",
+    "zxcvbn": "4.4.2"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.8",
+    "style-loader": "^0.19.1",
+    "webpack": "3.10.0"
+  }
+}

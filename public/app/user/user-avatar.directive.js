@@ -1,8 +1,7 @@
-angular
-  .module('mage')
-  .directive('avatarUser', avatarUser);
+var $ = require('jquery')
+  , EXIF = require('exif-js');
 
-function avatarUser() {
+module.exports = function avatarUser() {
   var directive = {
     restrict: "A",
     replace: true,
@@ -15,7 +14,7 @@ function avatarUser() {
   };
 
   return directive;
-}
+};
 
 AvatarUserController.$inject = ['$scope', '$element', '$http', 'LocalStorageService'];
 

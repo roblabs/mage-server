@@ -1,10 +1,8 @@
-angular
-  .module('mage')
-  .filter('user', userFilter);
+var _ = require('underscore');
 
-userFilter.$inject = [];
+UserFilter.$inject = [];
 
-function userFilter() {
+function UserFilter() {
   return function(collection, properties, search) {
     if (!search) return collection;
 
@@ -22,3 +20,5 @@ function userFilter() {
     });
   };
 }
+
+module.exports = UserFilter;

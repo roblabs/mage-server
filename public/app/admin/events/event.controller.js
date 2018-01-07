@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('AdminEventController', AdminEventController);
+var _ = require('underscore');
 
 AdminEventController.$inject = ['$scope', '$location', '$filter', '$routeParams', '$q', '$uibModal', 'LocalStorageService', 'UserService', 'EventService', 'Event', 'Team', 'Layer'];
 
@@ -316,3 +314,5 @@ function AdminEventController($scope, $location, $filter, $routeParams, $q, $uib
     });
   };
 }
+
+module.exports = AdminEventController;

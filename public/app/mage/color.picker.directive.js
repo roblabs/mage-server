@@ -1,19 +1,3 @@
-angular
-  .module('mage')
-  .directive('colorPicker', colorPicker);
-
-function colorPicker() {
-  var directive = {
-    restrict: "A",
-    scope: {
-      colorPicker: '='
-    },
-    controller: ColorPickerController
-  };
-
-  return directive;
-}
-
 ColorPickerController.$inject = ['$scope', '$element'];
 
 function ColorPickerController($scope, $element) {
@@ -30,3 +14,15 @@ function ColorPickerController($scope, $element) {
 
   initialize();
 }
+
+module.exports = function colorPicker() {
+  var directive = {
+    restrict: "A",
+    scope: {
+      colorPicker: '='
+    },
+    controller: ColorPickerController
+  };
+
+  return directive;
+};

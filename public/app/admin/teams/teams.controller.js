@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('AdminTeamsController', AdminTeamsController);
+var _ = require('underscore');
 
 AdminTeamsController.$inject = ['$scope', '$uibModal', '$filter', '$location', 'Team', 'UserService'];
 
@@ -75,3 +73,5 @@ function AdminTeamsController($scope, $uibModal, $filter, $location, Team, UserS
     });
   };
 }
+
+module.exports = AdminTeamsController;

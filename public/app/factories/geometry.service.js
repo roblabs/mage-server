@@ -1,6 +1,7 @@
-angular
-  .module('mage')
-  .factory('GeometryService', GeometryService);
+require('angular');
+
+var turfKinks= require('@turf/kinks')
+  , turf = require('@turf/helpers');
 
 GeometryService.$inject = [];
 
@@ -18,7 +19,12 @@ function GeometryService() {
     }
 
     var polygon = turf.polygon(feature.geometry.coordinates);
-    var kinks = turf.kinks(polygon);
+
+    var kinks = turfKinks(polygon);
+
+
     return kinks.intersections.features.length !== 0;
   }
 }
+
+module.exports = GeometryService;

@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .factory('FeatureService', FeatureService);
+var _ = require('underscore');
 
 FeatureService.$inject = ['$q', '$http'];
 
@@ -50,3 +48,5 @@ function FeatureService($q, $http) {
     return deferred.promise;
   }
 }
+
+module.exports = FeatureService;

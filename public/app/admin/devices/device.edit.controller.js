@@ -1,6 +1,5 @@
-angular
-  .module('mage')
-  .controller('AdminDeviceEditController', AdminDeviceEditController);
+var _ = require('underscore')
+  , angular = require('angular');
 
 AdminDeviceEditController.$inject = ['$scope', '$filter', '$routeParams', '$location', 'LocalStorageService', 'DeviceService', 'UserService'];
 
@@ -60,19 +59,19 @@ function AdminDeviceEditController($scope, $filter, $routeParams, $location, Loc
     if (device.id) {
       DeviceService.updateDevice(device).success(function() {
         $location.path('/admin/devices/' + device.id);
-      })
-      .error(function(response) {
+      }).error(function(response) {
         $scope.saving = false;
         $scope.error = response.responseText;
       });
     } else {
       DeviceService.createDevice(device).success(function (newDevice) {
         $location.path('/admin/devices/' + newDevice.id);
-      })
-      .error(function (response) {
+      }).error(function (response) {
         $scope.saving = false;
         $scope.error = response.responseText;
       });
     }
   };
 }
+
+module.exports = AdminDeviceEditController;

@@ -1,6 +1,6 @@
-angular
-  .module('mage')
-  .service('EventService', EventService);
+var _ = require('underscore')
+  , angular = require('angular')
+  , moment = require('moment');
 
 EventService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'Event', 'ObservationService', 'LocationService', 'LayerService', 'FilterService', 'PollingService'];
 
@@ -95,7 +95,7 @@ function EventService($rootScope, $q, $timeout, $http, Event, ObservationService
     usersChanged({added: usersAdded, removed: usersRemoved});
   }
 
-  function onActionFilterChanged(actionFilter) {
+  function onActionFilterChanged() {
     var event = FilterService.getEvent();
     if (!event) return;
 
@@ -556,3 +556,5 @@ function EventService($rootScope, $q, $timeout, $http, Event, ObservationService
     });
   }
 }
+
+module.exports = EventService;

@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('SigninController', SigninController);
+var _ = require('underscore');
 
 SigninController.$inject = ['$scope', '$rootScope', 'UserService', 'api'];
 
@@ -53,9 +51,8 @@ function SigninController($scope, $rootScope, UserService, api) {
   }
 
   function onWin(googleUser){
-    var basicProfile = googleUser.getBasicProfile();
-    var id_token = googleUser.getAuthResponse().id_token;
-    UserService.googleSignin({uid: $scope.uid, token: id_token}).then(function() {
+    var idToken = googleUser.getAuthResponse().id_token;
+    UserService.googleSignin({uid: $scope.uid, token: idToken}).then(function() {
       // success
     }, function(data) {
       $scope.showStatus = true;
@@ -70,10 +67,6 @@ function SigninController($scope, $rootScope, UserService, api) {
         $scope.statusLevel = 'alert-danger';
       }
     });
-  }
-
-  var updateSignIn = function() {
-    console.log('update sign in state' + auth2.isSignedIn.get());
   }
 
   $scope.initializeGoogleButton = function(strategy) {
@@ -94,9 +87,11 @@ function SigninController($scope, $rootScope, UserService, api) {
         });
       });
     });
-  }
+  };
 
   function localStrategyFilter(strategy, name) {
     return name === 'local';
   }
 }
+
+module.exports = SigninController;

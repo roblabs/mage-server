@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('NavController', NavController);
+var _ = require('underscore');
 
 NavController.$inject =  ['$rootScope', '$scope', '$q', '$location', '$uibModal', 'UserService', 'FilterService', 'PollingService', 'Event', 'Settings'];
 
@@ -82,3 +80,5 @@ function NavController($rootScope, $scope, $q, $location, $uibModal, UserService
     });
   };
 }
+
+module.exports = NavController;

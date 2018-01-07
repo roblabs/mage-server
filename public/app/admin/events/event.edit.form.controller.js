@@ -1,6 +1,7 @@
-angular
-  .module('mage')
-  .controller('AdminEventEditFormController', AdminEventEditFormController);
+var _ = require('underscore')
+  , angular = require('angular');
+
+require('../../file-upload/file-upload.directive');
 
 AdminEventEditFormController.$inject = ['$rootScope', '$scope', '$location', '$filter', '$routeParams', '$q', '$timeout', '$uibModal', 'LocalStorageService', 'EventService', 'Event', 'Form'];
 
@@ -641,3 +642,5 @@ function AdminEventEditFormController($rootScope, $scope, $location, $filter, $r
     }
   });
 }
+
+module.exports = AdminEventEditFormController;

@@ -1,6 +1,5 @@
-angular
-  .module('mage')
-  .factory('ObservationService', ObservationService);
+var _ = require('underscore')
+  , $ = require('jquery');
 
 ObservationService.$inject = ['$q', 'Observation', 'ObservationAttachment', 'ObservationState', 'ObservationImportant', 'ObservationFavorite', 'LocalStorageService'];
 
@@ -220,3 +219,5 @@ function ObservationService($q, Observation, ObservationAttachment, ObservationS
     return url + '?' + $.param({access_token: LocalStorageService.getToken()});
   }
 }
+
+module.exports = ObservationService;

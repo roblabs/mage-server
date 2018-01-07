@@ -1,8 +1,8 @@
-angular
-  .module('mage')
-  .directive('newsFeed', newsFeed);
+var $ = require('jquery')
+  , _ = require('underscore')
+  , moment = require('moment');
 
-function newsFeed() {
+function NewsFeed() {
   var directive = {
     restrict: "A",
     templateUrl:  "app/mage/feed.directive.html",
@@ -241,3 +241,5 @@ function NewsFeedController($rootScope, $scope, $element, $filter, $timeout, Eve
 
   }
 }
+
+module.exports = NewsFeed;

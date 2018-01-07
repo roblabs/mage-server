@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('AdminUsersController', AdminUsersController);
+var _ = require('underscore');
 
 AdminUsersController.$inject = ['$scope', '$uibModal', '$filter', '$location', 'LocalStorageService', 'UserService'];
 
@@ -103,3 +101,5 @@ function AdminUsersController($scope, $uibModal, $filter, $location, LocalStorag
     });
   };
 }
+
+module.exports = AdminUsersController;

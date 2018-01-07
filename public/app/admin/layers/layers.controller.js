@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('AdminLayersController', AdminLayersController);
+var _ = require('underscore');
 
 AdminLayersController.$inject = ['$scope', '$filter', '$uibModal', '$location', 'Layer', 'UserService'];
 
@@ -82,3 +80,5 @@ function AdminLayersController($scope, $filter, $uibModal, $location, Layer, Use
     });
   };
 }
+
+module.exports = AdminLayersController;

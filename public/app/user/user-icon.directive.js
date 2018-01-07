@@ -1,8 +1,4 @@
-angular
-  .module('mage')
-  .directive('iconUser', iconUser);
-
-function iconUser() {
+module.exports = function iconUser() {
   var directive = {
     restrict: "A",
     templateUrl: '/app/user/user-icon.directive.html',
@@ -13,7 +9,7 @@ function iconUser() {
   };
 
   return directive;
-}
+};
 
 IconUserController.$inject = ['$scope', '$element', 'LocalStorageService'];
 

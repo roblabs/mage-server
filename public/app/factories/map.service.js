@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .factory('MapService', MapService);
+var _ = require('underscore');
 
 MapService.$inject = [];
 
@@ -311,3 +309,5 @@ function MapService() {
     });
   }
 }
+
+module.exports = MapService;

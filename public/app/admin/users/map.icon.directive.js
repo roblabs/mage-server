@@ -1,20 +1,4 @@
-angular
-  .module('mage')
-  .directive('mapIcon', mapIcon);
-
-function mapIcon() {
-  var directive = {
-    restrict: "A",
-    template: '<canvas></canvas>',
-    replace: true,
-    scope: {
-      icon: '=mapIcon'
-    },
-    controller: MapIconController
-  };
-
-  return directive;
-}
+var WebFont = require('webfontloader');
 
 MapIconController.$inject = ['$scope', '$element', 'UserIconService'];
 
@@ -47,3 +31,5 @@ function MapIconController($scope, $element, UserIconService) {
     updateIcon();
   }, true);
 }
+
+module.exports = MapIconController;

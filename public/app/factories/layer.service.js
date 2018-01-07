@@ -1,7 +1,3 @@
-angular
-  .module('mage')
-  .factory('LayerService', LayerService);
-
 LayerService.$inject = ['$q', 'Layer'];
 
 function LayerService($q, Layer) {
@@ -20,3 +16,5 @@ function LayerService($q, Layer) {
     return deferred.promise;
   }
 }
+
+module.exports = LayerService;

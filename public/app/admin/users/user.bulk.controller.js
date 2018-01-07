@@ -1,18 +1,5 @@
-angular
-  .module('mage')
-  .directive('fileChange', function() {
-    return {
-      restrict: 'A',
-      link: function (scope, element, attrs) {
-        var fileChangeFunc = scope.$eval(attrs.fileChange);
-        element.bind('change', fileChangeFunc);
-      }
-    };
-  });
-
-angular
-  .module('mage')
-  .controller('AdminUserBulkController', AdminUserBulkController);
+var _ = require('underscore')
+  , Papa = require('papaparse');
 
 AdminUserBulkController.$inject = ['$scope', '$filter', '$routeParams', '$location', '$q', 'LocalStorageService', 'UserService', 'Team', 'UserIconService'];
 
@@ -227,3 +214,5 @@ function AdminUserBulkController($scope, $filter, $routeParams, $location, $q, L
     $scope.unmappedFields = _.difference(requiredFields, _.intersection(_.allKeys($scope.columnMap), requiredFields));
   }
 }
+
+module.exports = AdminUserBulkController;

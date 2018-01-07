@@ -1,10 +1,8 @@
-angular
-  .module('mage')
-  .filter('events', EventFilter);
+var _ = require('underscore');
 
-EventFilter.$inject = ['$parse'];
+EventFilter.$inject = [];
 
-function EventFilter($parse) {
+function EventFilter() {
   return function(events, search) {
     if (!search) return events;
 
@@ -18,5 +16,7 @@ function EventFilter($parse) {
     return events.filter(function(element) {
       return match.test(element.name) || match.test(element.description);
     });
-  }
+  };
 }
+
+module.exports = EventFilter;

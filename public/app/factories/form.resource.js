@@ -1,6 +1,5 @@
-angular
-  .module('mage')
-  .factory('Form', Form);
+var _ = require('underscore')
+  , $ = require('jquery');
 
 Form.$inject = ['$rootScope', '$resource', 'LocalStorageService'];
 
@@ -75,3 +74,5 @@ function Form($rootScope, $resource, LocalStorageService) {
 
   return Form;
 }
+
+module.exports = Form;

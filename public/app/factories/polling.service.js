@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .service('PollingService', PollingService);
+var _ = require('underscore');
 
 PollingService.$inject = ['LocalStorageService'];
 
@@ -46,3 +44,5 @@ function PollingService(LocalStorageService) {
     return pollingInterval;
   }
 }
+
+module.exports = PollingService;

@@ -1,6 +1,4 @@
-angular
-  .module('mage')
-  .controller('AdminEventAccessController', AdminEventAccessController);
+var _ = require('underscore');
 
 AdminEventAccessController.$inject = ['$scope', '$location', '$routeParams', '$q', '$filter', 'Event', 'EventAccess', 'UserService'];
 
@@ -100,3 +98,5 @@ function AdminEventAccessController($scope, $location, $routeParams, $q, $filter
     return filteredMembers && filteredMembers.length;
   };
 }
+
+module.exports = AdminEventAccessController;

@@ -1,7 +1,3 @@
-angular
-	.module('mage')
-	.factory('Api', Api);
-
 Api.$inject = ['$resource'];
 
 function Api($resource) {
@@ -14,3 +10,5 @@ function Api($resource) {
 
   return Api;
 }
+
+module.exports = Api;

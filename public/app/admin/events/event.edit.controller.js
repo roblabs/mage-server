@@ -1,7 +1,3 @@
-angular
-  .module('mage')
-  .controller('AdminEventEditController', AdminEventEditController);
-
 AdminEventEditController.$inject = ['$scope', '$location', '$routeParams', 'Event'];
 
 function AdminEventEditController($scope, $location, $routeParams, Event) {
@@ -39,3 +35,5 @@ function AdminEventEditController($scope, $location, $routeParams, Event) {
     $scope.event.formArchiveFile = uploadFile;
   });
 }
+
+module.exports = AdminEventEditController;

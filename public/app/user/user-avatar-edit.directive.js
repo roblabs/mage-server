@@ -1,19 +1,4 @@
-angular
-  .module('mage')
-  .directive('avatarUserEdit', avatarUserEdit);
-
-function avatarUserEdit() {
-  var directive = {
-    restrict: "A",
-    templateUrl: '/app/user/user-avatar-edit.directive.html',
-    scope: {
-      user: '=avatarUserEdit'
-    },
-    controller: AvatarUserEditController
-  };
-
-  return directive;
-}
+require('jquery');
 
 AvatarUserEditController.$inject = ['$scope', '$element'];
 
@@ -34,3 +19,16 @@ function AvatarUserEditController($scope, $element) {
     }
   });
 }
+
+module.exports = function avatarUserEdit() {
+  var directive = {
+    restrict: "A",
+    templateUrl: '/app/user/user-avatar-edit.directive.html',
+    scope: {
+      user: '=avatarUserEdit'
+    },
+    controller: AvatarUserEditController
+  };
+
+  return directive;
+};

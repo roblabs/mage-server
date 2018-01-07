@@ -1,6 +1,5 @@
-angular
-  .module('mage')
-  .factory('UserService', UserService);
+var _ = require('underscore')
+  , $ = require('jquery');
 
 UserService.$inject = ['$rootScope', '$q', '$http', '$location', '$timeout', '$window', 'LocalStorageService'];
 
@@ -58,15 +57,15 @@ function UserService($rootScope, $q, $http, $location, $timeout, $window, LocalS
 
     data.appVersion = 'Web Client';
     var promise = $http.post('/auth/google/signin', $.param(data), {
-     headers: {"Content-Type": "application/x-www-form-urlencoded"},
-     ignoreAuthModule:true
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      ignoreAuthModule:true
     });
 
     promise.success(function(data) {
-     setUser(data.user);
-     LocalStorageService.setToken(data.token);
-     $rootScope.$broadcast('event:auth-login', {token: data.token, newUser: data.user.username !== oldUsername});
-     $rootScope.$broadcast('event:user', {user: data.user, token: data.token, isAdmin: service.amAdmin});
+      setUser(data.user);
+      LocalStorageService.setToken(data.token);
+      $rootScope.$broadcast('event:auth-login', {token: data.token, newUser: data.user.username !== oldUsername});
+      $rootScope.$broadcast('event:user', {user: data.user, token: data.token, isAdmin: service.amAdmin});
     });
 
     return promise;
@@ -175,15 +174,13 @@ function UserService($rootScope, $q, $http, $location, $timeout, $window, LocalS
     var theDeferred = $q.defer();
     $http.get('/api/users/myself',{
       headers: {"Content-Type": "application/x-www-form-urlencoded"}
-    })
-    .success(function(user) {
+    }).success(function(user) {
       setUser(user);
 
       $rootScope.$broadcast('event:user', {user: user, token: LocalStorageService.getToken(), isAdmin: service.amAdmin});
 
       theDeferred.resolve(user);
-    })
-    .error(function() {
+    }).error(function() {
       theDeferred.resolve({});
     });
 
@@ -210,12 +207,10 @@ function UserService($rootScope, $q, $http, $location, $timeout, $window, LocalS
   }
 
   function checkLoggedInUser() {
-    $http.get('/api/users/myself', {ignoreAuthModule: true})
-    .success(function(user) {
+    $http.get('/api/users/myself', {ignoreAuthModule: true}).success(function(user) {
       setUser(user);
       userDeferred.resolve(user);
-    })
-    .error(function() {
+    }).error(function() {
       userDeferred.resolve({});
     });
 
@@ -363,3 +358,5 @@ function UserService($rootScope, $q, $http, $location, $timeout, $window, LocalS
     });
   }
 }
+
+module.exports = UserService;

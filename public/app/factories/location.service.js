@@ -1,6 +1,5 @@
-angular
-  .module('mage')
-  .factory('LocationService', LocationService);
+var _ = require('underscore')
+  , $ = require('jquery');
 
 LocationService.$inject = ['$q', 'Location', 'UserService', 'LocalStorageService'];
 
@@ -59,3 +58,5 @@ function LocationService($q, Location, UserService, LocalStorageService) {
     return deferred.promise;
   }
 }
+
+module.exports = LocationService;

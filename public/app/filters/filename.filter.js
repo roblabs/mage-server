@@ -1,11 +1,6 @@
-angular
-  .module('mage')
-  .filter('filename', filenameFilter);
+FilenameFilter.$inject = ['$filter'];
 
-filenameFilter.$inject = ['$filter'];
-
-
-function filenameFilter($filter) {
+function FilenameFilter($filter) {
   function filter(input, limit) {
     if (!input || !limit) return input;
 
@@ -17,3 +12,5 @@ function filenameFilter($filter) {
   filter.$stateful = true;
   return filter;
 }
+
+module.exports = FilenameFilter;
