@@ -3,7 +3,7 @@ var angular = require('angular')
 
 module.exports = function formDirective() {
   var directive = {
-    templateUrl: 'app/observation/form/form.directive.html',
+    template: require('./form.directive.html'),
     restrict: 'E',
     transclude: true,
     scope: {

@@ -33,7 +33,7 @@ function AvatarUserController($scope, $element, $http, LocalStorageService) {
     var url = $scope.user.avatarUrl + '?_dc=' + $scope.user.lastUpdated;
     getAvatar(url);
   } else {
-    image.src = "img/missing_photo.png";
+    image.src = "images/missing_photo.png";
   }
 
   $scope.$watch('user.avatarUrl', function(newUrl, oldUrl) {
@@ -83,6 +83,6 @@ function avatarUrl(user) {
   if (user && user.avatarUrl) {
     return user.avatarUrl + '?_dc=' + user.lastUpdated;
   } else {
-    return "img/missing_photo.png";
+    return "images/missing_photo.png";
   }
 }

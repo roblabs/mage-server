@@ -32,7 +32,7 @@ module.exports = function banner() {
     scope: {
       type: '@banner'
     },
-    templateUrl: '/app/mage/banner.directive.html',
+    template: require('./banner.directive.html'),
     controller: BannerController
   };
 

@@ -3,7 +3,7 @@ var moment = require('moment');
 module.exports = function userNewsItem() {
   var directive = {
     restrict: "A",
-    templateUrl:  "app/user/user-feed.directive.html",
+    template:  require('./user-feed.directive.html'),
     scope: {
       user: '=userNewsItem',
       followUserId: '=userNewsItemFollow'
@@ -23,7 +23,7 @@ function UserNewsItemController($scope, LocalStorageService) {
   if ($scope.user.avatarUrl) {
     $scope.avatarUrl = $scope.user.avatarUrl + "?access_token=" + LocalStorageService.getToken();
   } else {
-    $scope.avatarUrl = "img/missing_photo.png";
+    $scope.avatarUrl = "images/missing_photo.png";
   }
 
   $scope.followUser = function(e, user) {

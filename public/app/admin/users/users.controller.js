@@ -57,7 +57,7 @@ function AdminUsersController($scope, $uibModal, $filter, $location, LocalStorag
     $event.stopPropagation();
 
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/users/user-delete.html',
+      template: require('./user-delete.html'),
       resolve: {
         user: function () {
           return user;

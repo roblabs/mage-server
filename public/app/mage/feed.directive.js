@@ -5,7 +5,7 @@ var $ = require('jquery')
 function NewsFeed() {
   var directive = {
     restrict: "A",
-    templateUrl:  "app/mage/feed.directive.html",
+    template:  require('./feed.directive.html'),
     scope: {
       observations: '=feedObservations',
       feedObservationsChanged: '=',

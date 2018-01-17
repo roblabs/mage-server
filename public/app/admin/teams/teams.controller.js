@@ -59,7 +59,7 @@ function AdminTeamsController($scope, $uibModal, $filter, $location, Team, UserS
     $event.stopPropagation();
 
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/teams/team-delete.html',
+      template: require('./team-delete.html'),
       resolve: {
         team: function () {
           return team;

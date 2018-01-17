@@ -1,4 +1,5 @@
 @import "../vendor/bootstrap/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.min.css";
 
 /*
   Allow angular.js to be loaded in body, hiding cloaked elements until

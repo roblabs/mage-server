@@ -18,7 +18,6 @@ angular
   .config(config)
   .run(run);
 
-require('leaflet'); // TODO not sure if I need this here
 require('./factories');
 require('./filters');
 require('./leaflet-extensions');
@@ -77,7 +76,7 @@ function config($provide, $httpProvider, $routeProvider, $animateProvider) {
   });
 
   $routeProvider.when('/setup', {
-    templateUrl: 'app/setup/setup.html',
+    template: require('./setup/setup.html'),
     controller: 'SetupController',
     resolve: {
       api: ['$q', '$location', 'Api', function($q, $location, Api) {
@@ -96,7 +95,7 @@ function config($provide, $httpProvider, $routeProvider, $animateProvider) {
   });
 
   $routeProvider.when('/signin', {
-    templateUrl: 'app/signin/signin.html',
+    template: require('./signin/signin.html'),
     controller: 'SigninController',
     resolve: {
       api: ['$q', '$location', 'Api', function($q, $location, Api) {
@@ -115,7 +114,7 @@ function config($provide, $httpProvider, $routeProvider, $animateProvider) {
   });
 
   $routeProvider.when('/signup', {
-    templateUrl: 'app/signup/signup.html',
+    template: require('./signup/signup.html'),
     controller: 'SignupController',
     resolve: {
       api: ['$q', '$location', 'Api', function($q, $location, Api) {
@@ -134,171 +133,166 @@ function config($provide, $httpProvider, $routeProvider, $animateProvider) {
   });
 
   $routeProvider.when('/admin', {
-    templateUrl: 'app/admin/admin.html',
+    template: require('./admin/admin.html'),
     controller:  'AdminController',
     resolve: resolveAdmin()
   });
 
   // Admin user routes
   $routeProvider.when('/admin/users', {
-    templateUrl:    'app/admin/users/users.html',
-    controller:     "AdminUsersController",
+    template: require('./admin/users/users.html'),
+    controller: "AdminUsersController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/users/new', {
-    templateUrl:    'app/admin/users/user.edit.html',
-    controller:     "AdminUserEditController",
+    template: require('./admin/users/user.edit.html'),
+    controller: "AdminUserEditController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/users/bulk', {
-    templateUrl:    'app/admin/users/user.bulk.html',
-    controller:     "AdminUserBulkController",
+    template: require('./admin/users/user.bulk.html'),
+    controller: "AdminUserBulkController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/users/:userId/', {
-    templateUrl:    'app/admin/users/user.html',
-    controller:     "AdminUserController",
+    template: require('./admin/users/user.html'),
+    controller: "AdminUserController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/users/:userId/edit', {
-    templateUrl:    'app/admin/users/user.edit.html',
-    controller:     "AdminUserEditController",
+    template: require('./admin/users/user.edit.html'),
+    controller: "AdminUserEditController",
     resolve: resolveAdmin()
   });
 
   // Admin team routes
   $routeProvider.when('/admin/teams', {
-    templateUrl:    'app/admin/teams/teams.html',
-    controller:     "AdminTeamsController",
+    template: require('./admin/teams/teams.html'),
+    controller: "AdminTeamsController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/teams/new', {
-    templateUrl:    'app/admin/teams/team.edit.html',
-    controller:     "AdminTeamEditController",
+    template: require('./admin/teams/team.edit.html'),
+    controller: "AdminTeamEditController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/teams/:teamId/', {
-    templateUrl:    'app/admin/teams/team.html',
-    controller:     "AdminTeamController",
+    template: require('./admin/teams/team.html'),
+    controller: "AdminTeamController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/teams/:teamId/edit', {
-    templateUrl:    'app/admin/teams/team.edit.html',
-    controller:     "AdminTeamEditController",
+    template: require('./admin/teams/team.edit.html'),
+    controller: "AdminTeamEditController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/teams/:teamId/access', {
-    templateUrl:    'app/admin/teams/team.access.html',
-    controller:     "AdminTeamAccessController",
+    template: require('./admin/teams/team.access.html'),
+    controller: "AdminTeamAccessController",
     resolve: resolveAdmin()
   });
 
   // Admin event routes
   $routeProvider.when('/admin/events', {
-    templateUrl:    'app/admin/events/events.html',
-    controller:     "AdminEventsController",
+    template: require('./admin/events/events.html'),
+    controller: "AdminEventsController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/events/new', {
-    templateUrl:    'app/admin/events/event.edit.html',
-    controller:     "AdminEventEditController",
+    template: require('./admin/events/event.edit.html'),
+    controller: "AdminEventEditController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/events/:eventId/', {
-    templateUrl:    'app/admin/events/event.html',
-    controller:     "AdminEventController",
+    template: require('./admin/events/event.html'),
+    controller: "AdminEventController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/events/:eventId/edit', {
-    templateUrl:    'app/admin/events/event.edit.html',
-    controller:     "AdminEventEditController",
+    template: require('./admin/events/event.edit.html'),
+    controller: "AdminEventEditController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/events/:eventId/access', {
-    templateUrl:    'app/admin/events/event.access.html',
-    controller:     "AdminEventAccessController",
+    template: require('./admin/events/event.access.html'),
+    controller: "AdminEventAccessController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/events/:eventId/forms/new', {
-    templateUrl:    'app/admin/events/event.edit.form.html',
-    controller:     "AdminEventEditFormController",
+    template: require('./admin/events/event.edit.form.html'),
+    controller: "AdminEventEditFormController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/events/:eventId/forms/:formId', {
-    templateUrl:    'app/admin/events/event.edit.form.html',
-    controller:     "AdminEventEditFormController",
+    template: require('./admin/events/event.edit.form.html'),
+    controller: "AdminEventEditFormController",
     resolve: resolveAdmin()
   });
 
   // Admin device routes
   $routeProvider.when('/admin/devices', {
-    templateUrl:    'app/admin/devices/devices.html',
-    controller:     "AdminDevicesController",
+    template: require('./admin/devices/devices.html'),
+    controller: "AdminDevicesController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/devices/new/', {
-    templateUrl:    'app/admin/devices/device.edit.html',
-    controller:     "AdminDeviceEditController",
+    template: require('./admin/devices/device.edit.html'),
+    controller: "AdminDeviceEditController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/devices/:deviceId/', {
-    templateUrl:    'app/admin/devices/device.html',
-    controller:     "AdminDeviceController",
+    template: require('./admin/devices/device.html'),
+    controller: "AdminDeviceController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/devices/:deviceId/edit', {
-    templateUrl:    'app/admin/devices/device.edit.html',
-    controller:     "AdminDeviceEditController",
+    template: require('./admin/devices/device.edit.html'),
+    controller: "AdminDeviceEditController",
     resolve: resolveAdmin()
   });
 
   // Admin layer routes
   $routeProvider.when('/admin/layers', {
-    templateUrl:    'app/admin/layers/layers.html',
-    controller:     "AdminLayersController",
+    template: require('./admin/layers/layers.html'),
+    controller: "AdminLayersController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/layers/new/', {
-    templateUrl:    'app/admin/layers/layer.edit.html',
-    controller:     "AdminLayerEditController",
+    template: require('./admin/layers/layer.edit.html'),
+    controller: "AdminLayerEditController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/layers/:layerId/', {
-    templateUrl:    'app/admin/layers/layer.html',
-    controller:     "AdminLayerController",
+    template: require('./admin/layers/layer.html'),
+    controller: "AdminLayerController",
     resolve: resolveAdmin()
   });
   $routeProvider.when('/admin/layers/:layerId/edit', {
-    templateUrl:    'app/admin/layers/layer.edit.html',
-    controller:     "AdminLayerEditController",
+    template: require('./admin/layers/layer.edit.html'),
+    controller: "AdminLayerEditController",
     resolve: resolveAdmin()
   });
 
   // Admin settings routes
   $routeProvider.when('/admin/settings', {
-    templateUrl:    'app/admin/settings/settings.html',
-    controller:     "AdminSettingsController",
+    template: require('./admin/settings/settings.html'),
+    controller: "AdminSettingsController",
     resolve: resolveAdmin()
   });
 
-  $routeProvider.when('/debug-info', {
-    templateUrl:    'app/debug/debug.html',
-    controller:     "DebugController",
-    resolve: resolveAdmin()
-  });
   $routeProvider.when('/map', {
-    templateUrl:    'app/mage/mage.html',
-    controller:     "MageController",
+    template: require('./mage/mage.html'),
+    controller: "MageController",
     resolve: resolveLogin()
   });
   $routeProvider.when('/user', {
-    templateUrl:    "app/user/user.html",
-    controller:      "UserController",
+    template: require("./user/user.html"),
+    controller: "UserController",
     resolve: resolveLogin()
   });
   $routeProvider.when('/about', {
-    templateUrl:    "/app/about/about.html",
-    controller:     "AboutController",
+    template: require("./about/about.html"),
+    controller: "AboutController",
     resolve: resolveLogin()
   });
 }
@@ -312,7 +306,7 @@ function run($rootScope, $route, $uibModal, UserService, $location, authService,
     if (!$rootScope.loginDialogPresented && !_(pathExceptions).contains($location.path()) && !_(requestExceptions).contains(response.config.url)) {
       $rootScope.loginDialogPresented = true;
       var modalInstance = $uibModal.open({
-        templateUrl: 'app/signin/signin-modal.html',
+        template: require('./signin/signin-modal.html'),
         controller: ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
           Api.get(function(api) {
             function localStrategyFilter(strategy, name) {
@@ -394,7 +388,7 @@ function run($rootScope, $route, $uibModal, UserService, $location, authService,
       }
 
       var modalInstance = $uibModal.open({
-        templateUrl: 'app/disclaimer/disclaimer.html',
+        template: require('./disclaimer/disclaimer.html'),
         controller: 'DisclaimerController',
         resolve: {
           disclaimer: function() {

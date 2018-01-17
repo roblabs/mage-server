@@ -20,6 +20,7 @@ angular.module('mage', [
   require('./app/auth/http-auth-interceptor')
 ]);
 
+require('./img');
 require ('./css');
 require('./app');
 

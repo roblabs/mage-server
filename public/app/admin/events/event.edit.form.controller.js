@@ -1,4 +1,5 @@
 var _ = require('underscore')
+  , $ = require('jquery')
   , angular = require('angular');
 
 require('../../file-upload/file-upload.directive');
@@ -428,7 +429,7 @@ function AdminEventEditFormController($rootScope, $scope, $location, $filter, $r
 
   $scope.reorderOption = function(field, option) {
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/events/event.field.option.reorder.html',
+      template: require('./event.field.option.reorder.html'),
       controller: ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
         $scope.model = {
           option: option,
@@ -503,7 +504,7 @@ function AdminEventEditFormController($rootScope, $scope, $location, $filter, $r
     };
 
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/events/event.symbology.chooser.html',
+      template: require('./event.symbology.chooser.html'),
       scope: $scope,
       size: 'lg',
       controller: ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
@@ -627,7 +628,7 @@ function AdminEventEditFormController($rootScope, $scope, $location, $filter, $r
       event.preventDefault();
 
       var modalInstance = $uibModal.open({
-        templateUrl: '/app/admin/events/event.edit.form.unsaved.html'
+        template: require('./event.edit.form.unsaved.html')
       });
 
       modalInstance.result.then(function(result) {

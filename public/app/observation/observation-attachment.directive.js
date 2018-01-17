@@ -1,7 +1,7 @@
 module.exports = function attachment() {
   var directive = {
     restrict: "A",
-    templateUrl: '/app/observation/observation-attachment.directive.html',
+    template: require('./observation-attachment.directive.html'),
     scope: {
       attachment: '=',
       attachmentObservation: '=',

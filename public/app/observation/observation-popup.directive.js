@@ -4,7 +4,7 @@ var _ = require('underscore')
 module.exports = function observationPopup() {
   var directive = {
     restrict: "A",
-    templateUrl:  "/app/observation/observation-popup.directive.html",
+    template:  require('./observation-popup.directive.html'),
     scope: {
       observation: '=observationPopup',
       observationPopupInfo: '&',

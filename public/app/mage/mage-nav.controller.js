@@ -56,7 +56,7 @@ function NavController($rootScope, $scope, $q, $location, $uibModal, UserService
 
   $scope.onFilterClick = function() {
     $uibModal.open({
-      templateUrl: '/app/filter/filter.html',
+      template: require('../filter/filter.html'),
       controller: 'FilterController',
       backdrop: 'static',
       resolve: {
@@ -69,7 +69,7 @@ function NavController($rootScope, $scope, $q, $location, $uibModal, UserService
 
   $scope.onExportClick = function() {
     $uibModal.open({
-      templateUrl: '/app/export/export.html',
+      template: require('../export/export.html'),
       controller: 'ExportController',
       backdrop: 'static',
       resolve: {

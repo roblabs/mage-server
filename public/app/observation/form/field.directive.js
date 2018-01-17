@@ -17,18 +17,18 @@ FieldDirectiveController.$inject = ['$scope', 'GeometryService'];
 
 function FieldDirectiveController($scope, GeometryService) {
   var types = {
-    textfield: 'app/observation/form/textfield.directive.html',
-    numberfield: 'app/observation/form/numberfield.directive.html',
-    email: 'app/observation/form/email.directive.html',
-    textarea: 'app/observation/form/textarea.directive.html',
-    checkbox: 'app/observation/form/checkbox.directive.html',
-    date: 'app/observation/form/date.directive.html',
-    geometry: 'app/observation/form/geometry.directive.html',
-    dropdown: 'app/observation/form/dropdown.directive.html',
-    multiselectdropdown: 'app/observation/form/multiselectdropdown.directive.html',
-    hidden: 'app/observation/form/hidden.directive.html',
-    password: 'app/observation/form/password.directive.html',
-    radio: 'app/observation/form/radio.directive.html'
+    textfield: require('./textfield.directive.html'),
+    numberfield: require('./numberfield.directive.html'),
+    email: require('./email.directive.html'),
+    textarea: require('./textarea.directive.html'),
+    checkbox: require('./checkbox.directive.html'),
+    date: require('./date.directive.html'),
+    geometry: require('./geometry.directive.html'),
+    dropdown: require('./dropdown.directive.html'),
+    multiselectdropdown: require('./multiselectdropdown.directive.html'),
+    hidden: require('./hidden.directive.html'),
+    password: require('./password.directive.html'),
+    radio: require('./radio.directive.html')
   };
 
   $scope.shapes = [{

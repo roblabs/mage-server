@@ -109,7 +109,7 @@ function AdminUserController($scope, $uibModal, $filter, $routeParams, $location
     if (user && user.avatarUrl) {
       return user.avatarUrl + "?access_token=" + token;
     } else {
-      return "img/missing_photo.png";
+      return "images/missing_photo.png";
     }
   }
 
@@ -117,7 +117,7 @@ function AdminUserController($scope, $uibModal, $filter, $routeParams, $location
     if (user && user.iconUrl) {
       return user.iconUrl + "?access_token=" + token;
     } else {
-      return "img/missing_marker.png";
+      return "images/missing_marker.png";
     }
   }
 
@@ -141,7 +141,7 @@ function AdminUserController($scope, $uibModal, $filter, $routeParams, $location
 
   $scope.deleteUser = function(user) {
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/users/user-delete.html',
+      template: require('./user-delete.html'),
       resolve: {
         user: function () {
           return user;

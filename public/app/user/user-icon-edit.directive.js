@@ -1,7 +1,7 @@
 module.exports = function iconUserEdit() {
   var directive = {
     restrict: "A",
-    templateUrl: '/app/user/user-icon-edit.directive.html',
+    template: require('./user-icon-edit.directive.html'),
     scope: {
       user: '=iconUserEdit'
     },

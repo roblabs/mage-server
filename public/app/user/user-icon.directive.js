@@ -1,7 +1,7 @@
 module.exports = function iconUser() {
   var directive = {
     restrict: "A",
-    templateUrl: '/app/user/user-icon.directive.html',
+    template: require('./user-icon.directive.html'),
     scope: {
       user: '=iconUser'
     },
@@ -26,7 +26,7 @@ function IconUserController($scope, $element, LocalStorageService) {
     if (iconUrl) {
       return iconUrl + "?access_token=" + token + '&_dc' + $scope.user.lastUpdated;
     } else {
-      return "img/missing_marker.png";
+      return "images/missing_marker.png";
     }
   }
 }

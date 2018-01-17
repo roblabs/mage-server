@@ -5,7 +5,7 @@ var _ = require('underscore')
 module.exports = function observationNewsItem() {
   var directive = {
     restrict: "A",
-    templateUrl:  "/app/observation/observation-feed.directive.html",
+    template:  require('./observation-feed.directive.html'),
     scope: {
       observation: '=observationNewsItem'
     },
@@ -48,7 +48,7 @@ function ObservationNewsItemController($scope, $window, $uibModal, EventService,
 
   $scope.showFavoriteUsers = function() {
     $uibModal.open({
-      templateUrl: '/app/observation/observation-favorites.html',
+      template: require('./observation-favorites.html'),
       scope: $scope,
       openedClass: 'observation-favorite-modal-content',
       controller: ['$scope', '$uibModalInstance', 'UserService', function ($scope, $uibModalInstance, UserService) {

@@ -23,7 +23,7 @@ function AvatarUserEditController($scope, $element) {
 module.exports = function avatarUserEdit() {
   var directive = {
     restrict: "A",
-    templateUrl: '/app/user/user-avatar-edit.directive.html',
+    template: require('./user-avatar-edit.directive.html'),
     scope: {
       user: '=avatarUserEdit'
     },

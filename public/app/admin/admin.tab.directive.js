@@ -1,5 +1,17 @@
 var _ = require('underscore');
 
+module.exports = function adminTab() {
+  return {
+    restrict: "A",
+    template: require('./admin.tab.html'),
+    replace: true,
+    scope: {
+      tab: '=adminTab'
+    },
+    controller: AdminTabController
+  };
+};
+
 AdminTabController.$inject = ['$scope', '$location', 'UserService', 'DeviceService'];
 
 function AdminTabController($scope, $location, UserService, DeviceService) {
@@ -43,5 +55,3 @@ function AdminTabController($scope, $location, UserService, DeviceService) {
     $scope.unregisteredDevices.push(device);
   });
 }
-
-module.exports = AdminTabController;

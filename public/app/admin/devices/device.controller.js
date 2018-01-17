@@ -64,7 +64,7 @@ function AdminDeviceController($scope, $uibModal, $filter, $routeParams, $locati
 
   $scope.deleteDevice = function(device) {
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/devices/device-delete.html',
+      template: require('./device-delete.html'),
       resolve: {
         device: function () {
           return device;

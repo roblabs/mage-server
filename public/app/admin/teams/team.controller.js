@@ -119,7 +119,7 @@ function AdminTeamController($scope, $uibModal, $filter, $location, $routeParams
 
   $scope.deleteTeam = function() {
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/teams/team-delete.html',
+      template: require('./team-delete.html'),
       resolve: {
         team: function () {
           return $scope.team;

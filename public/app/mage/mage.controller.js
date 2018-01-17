@@ -357,7 +357,7 @@ function MageController($scope, $compile, $timeout, $animate, $document, $uibMod
   function onBroadcastLocation(callback) {
     if (!EventService.isUserInEvent(UserService.myself, FilterService.getEvent())) {
       $uibModal.open({
-        templateUrl: '/app/error/not.in.event.html',
+        template: require('../error/not.in.event.html'),
         controller: 'NotInEventController',
         resolve: {
           title: function() {
@@ -445,7 +445,7 @@ function MageController($scope, $compile, $timeout, $animate, $document, $uibMod
     var event = FilterService.getEvent();
     if (!EventService.isUserInEvent(UserService.myself, event)) {
       $uibModal.open({
-        templateUrl: '/app/error/not.in.event.html',
+        template: require('../error/not.in.event.html'),
         controller: 'NotInEventController',
         resolve: {
           title: function() {

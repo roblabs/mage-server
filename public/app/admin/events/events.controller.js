@@ -69,7 +69,7 @@ function AdminEventsController($scope, $location, $filter, $uibModal, Event, Use
     $event.stopPropagation();
 
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/events/event-delete.html',
+      template: require('./event-delete.html'),
       resolve: {
         event: function () {
           return event;

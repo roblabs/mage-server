@@ -83,7 +83,7 @@ function AdminLayerController($scope, $uibModal, $routeParams, $location, $filte
 
   $scope.deleteLayer = function() {
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/layers/layer-delete.html',
+      template: require('./layer-delete.html'),
       resolve: {
         layer: function () {
           return $scope.layer;
