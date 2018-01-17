@@ -1,7 +1,7 @@
-require('angular');
-
 var turfKinks= require('@turf/kinks')
   , turf = require('@turf/helpers');
+
+module.exports = GeometryService;
 
 GeometryService.$inject = [];
 
@@ -26,5 +26,3 @@ function GeometryService() {
     return kinks.intersections.features.length !== 0;
   }
 }
-
-module.exports = GeometryService;

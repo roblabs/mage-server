@@ -1,8 +1,4 @@
-angular
-  .module('mage')
-  .directive('fieldDirective', fieldDirective);
-
-function fieldDirective() {
+module.exports = function fieldDirective() {
   var directive = {
     template: '<div ng-include src="templatePath"></div>',
     restrict: 'E',
@@ -15,7 +11,7 @@ function fieldDirective() {
   };
 
   return directive;
-}
+};
 
 FieldDirectiveController.$inject = ['$scope', 'GeometryService'];
 

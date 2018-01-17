@@ -15,13 +15,21 @@ module.exports = {
       test: /\.css$/,
       use: [{
         loader: 'style-loader'
-      }, {
+      },{
         loader: 'css-loader'
       }]
-    }],
-    rules: [{
-      test: /\.css$/,
-      use: ['css-loader']
+    },{
+      test: /\.(eot|svg|ttf|woff|woff2)$/,
+      loader: 'file-loader?name=fonts/[name].[ext]'
+    },{
+      test: /marker-icon\.png/,
+      use: [{
+        loader: 'file-loader',
+        options: {}
+      }]
+    },{
+      test: /\.(png|jpg)$/,
+      loader: 'url-loader?name=images/[name].[ext]'
     }]
   },
   plugins: [

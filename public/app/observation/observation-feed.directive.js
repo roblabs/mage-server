@@ -1,8 +1,8 @@
-angular
-  .module('mage')
-  .directive('observationNewsItem', observationNewsItem);
+var _ = require('underscore')
+  , $ = require('jquery')
+  , moment = require('moment');
 
-function observationNewsItem() {
+module.exports = function observationNewsItem() {
   var directive = {
     restrict: "A",
     templateUrl:  "/app/observation/observation-feed.directive.html",
@@ -13,7 +13,7 @@ function observationNewsItem() {
   };
 
   return directive;
-}
+};
 
 ObservationNewsItemController.$inject = ['$scope', '$window', '$uibModal', 'EventService', 'UserService', 'FilterService', 'LocalStorageService'];
 

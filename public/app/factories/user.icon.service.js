@@ -1,3 +1,5 @@
+module.exports = UserIconService;
+
 UserIconService.$inject = [];
 
 function UserIconService() {
@@ -70,5 +72,3 @@ function UserIconService() {
     return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
   }
 }
-
-module.exports = UserIconService;

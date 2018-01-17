@@ -1,6 +1,8 @@
 var _ = require('underscore')
   , $ = require('jquery');
 
+module.exports = Form;
+
 Form.$inject = ['$rootScope', '$resource', 'LocalStorageService'];
 
 function Form($rootScope, $resource, LocalStorageService) {
@@ -74,5 +76,3 @@ function Form($rootScope, $resource, LocalStorageService) {
 
   return Form;
 }
-
-module.exports = Form;

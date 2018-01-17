@@ -1,5 +1,7 @@
 var _ = require('underscore');
 
+module.exports = FeatureService;
+
 FeatureService.$inject = ['$q', '$http'];
 
 function FeatureService($q, $http) {
@@ -48,5 +50,3 @@ function FeatureService($q, $http) {
     return deferred.promise;
   }
 }
-
-module.exports = FeatureService;

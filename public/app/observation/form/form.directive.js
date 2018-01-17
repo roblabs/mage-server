@@ -1,8 +1,7 @@
-angular
-  .module('mage')
-  .directive('formDirective', formDirective);
+var angular = require('angular')
+  , _ = require('underscore');
 
-function formDirective() {
+module.exports = function formDirective() {
   var directive = {
     templateUrl: 'app/observation/form/form.directive.html',
     restrict: 'E',
@@ -16,7 +15,7 @@ function formDirective() {
   };
 
   return directive;
-}
+};
 
 FormDirectiveController.$inject = ['$scope', 'EventService', 'FilterService', 'Observation', 'ObservationService', 'UserService', 'LocalStorageService'];
 

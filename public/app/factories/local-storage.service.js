@@ -1,3 +1,5 @@
+module.exports = LocalStorageService;
+
 LocalStorageService.$inject = [];
 
 function LocalStorageService() {
@@ -111,5 +113,3 @@ function LocalStorageService() {
     }
   }
 }
-
-module.exports = LocalStorageService;

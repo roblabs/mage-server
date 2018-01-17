@@ -1,3 +1,6 @@
+var L = require('leaflet')
+  , $ = require('jquery');
+
 L.FixedWidthIcon = L.DivIcon.extend({
   options: {
     className: 'mage-icon',
@@ -10,7 +13,7 @@ L.FixedWidthIcon = L.DivIcon.extend({
     var self = this;
     var s = document.createElement('img');
     s.className = "mage-icon-image";
-    s.src = this.options.iconUrl;
+    // s.src = this.options.iconUrl;
     $(s).load(function() {
       if (self.options.onIconLoad) self.options.onIconLoad(self);
     });

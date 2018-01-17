@@ -1,5 +1,7 @@
 var _ = require('underscore');
 
+module.exports = MapService;
+
 MapService.$inject = [];
 
 function MapService() {
@@ -309,5 +311,3 @@ function MapService() {
     });
   }
 }
-
-module.exports = MapService;

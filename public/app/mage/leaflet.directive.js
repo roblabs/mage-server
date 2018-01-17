@@ -1,7 +1,11 @@
 var _ = require('underscore')
   , L = require('leaflet')
   , angular = require('angular')
-  , moment = require('moment');
+  , moment = require('moment')
+  , geosearch = require('leaflet-geosearch');
+
+require('leaflet-groupedlayercontrol');
+require('leaflet.markercluster');
 
 LeafletController.$inject = ['$rootScope', '$scope', '$interval', '$timeout', 'MapService', 'LocalStorageService', 'GeometryService'];
 
@@ -31,6 +35,8 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
   map.createPane(BASE_LAYER_PANE);
   map.getPane(BASE_LAYER_PANE).style.zIndex = 100;
 
+  L.Icon.Default.imagePath = 'images/';
+
   map.on('moveend', saveMapPosition);
 
   function saveMapPosition() {
@@ -41,9 +47,10 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
   }
 
   // toolbar  and controls config
-  new L.Control.GeoSearch({
-    provider: new L.GeoSearch.Provider.OpenStreetMap(),
-    showMarker: false
+  new geosearch.GeoSearchControl({
+    provider: new geosearch.OpenStreetMapProvider(),
+    showMarker: false,
+    autoClose: true
   }).addTo(map);
 
   new L.Control.MageFeature({

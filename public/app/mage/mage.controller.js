@@ -1,6 +1,7 @@
-angular
-  .module('mage')
-  .controller('MageController', MageController);
+var _ = require('underscore')
+  , angular = require('angular');
+
+module.exports = MageController;
 
 MageController.$inject = [
   '$scope',

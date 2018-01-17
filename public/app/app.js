@@ -14,13 +14,17 @@ angular
   .controller('SignupController', require('./signup/signup.controller'))
   .controller('UserController', require('./user/user.controller'))
   .controller('AboutController', require('./about/about.controller'))
+  .controller('DisclaimerController', require('./disclaimer/disclaimer.controller'))
   .config(config)
   .run(run);
 
-require('./mage');
-require('./filters');
-require('./user');
+require('leaflet'); // TODO not sure if I need this here
 require('./factories');
+require('./filters');
+require('./leaflet-extensions');
+require('./mage');
+require('./observation');
+require('./user');
 require('./admin');
 
 config.$inject = ['$provide', '$httpProvider', '$routeProvider', '$animateProvider'];
