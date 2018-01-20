@@ -96,16 +96,22 @@ UserSchema.pre('save', function(next) {
     },
     function(existingUser, done) {
       // Verify that the new password is different from the existing password
-      hasher.validPassword(user.authentication.password, existingUser.authentication.password, function(err, isValid) {
-        if (err) return done(err);
-
-        if (isValid) {
-          err = new Error('Password cannot be the same as previous password');
-          err.status = 400;
-        }
-
+      if(!existingUser) {
+        err = new Error('User not found');
+        err.status = 400;
         done(err);
-      });
+      } else {
+        hasher.validPassword(user.authentication.password, existingUser.authentication.password, function(err, isValid) {
+          if (err) return done(err);
+
+          if (isValid) {
+            err = new Error('Password cannot be the same as previous password');
+            err.status = 400;
+          }
+
+          done(err);
+        });
+      }
     },
     function(done) {
       // Finally hash the password
