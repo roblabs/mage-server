@@ -10,9 +10,6 @@ var request = require('supertest')
 require('chai').should();
 require('sinon-mongoose');
 
-require('../../models/team');
-var TeamModel = mongoose.model('Team');
-
 require('../../models/event');
 var EventModel = mongoose.model('Event');
 
@@ -235,6 +232,136 @@ describe("event read tests", function() {
       .query({state: 'all'})
       .set('Accept', 'application/json')
       .set('Authorization', 'Bearer 12345')
+      .expect(200)
+      .end(done);
+  });
+
+  it("should read event by id", function(done) {
+    mockTokenWithPermission('READ_EVENT_ALL');
+
+    var eventId = 1;
+    var mockEvent = new EventModel({
+      _id: eventId,
+      name: 'Mock Event'
+    });
+
+    sandbox.mock(EventModel)
+      .expects('findById')
+      .twice()
+      .onFirstCall()
+      .yields(null, mockEvent)
+      .onSecondCall()
+      .yields(null, mockEvent);
+
+    request(app)
+      .get('/api/events/1')
+      .query({state: 'all'})
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer 12345')
+      .expect(200)
+      .end(done);
+  });
+
+  it("should fail to read event by id if event does not exist", function(done) {
+    mockTokenWithPermission('READ_EVENT_ALL');
+
+    var eventId = 1;
+    var mockEvent = new EventModel({
+      _id: eventId,
+      name: 'Mock Event'
+    });
+
+    sandbox.mock(EventModel)
+      .expects('findById')
+      .twice()
+      .onFirstCall()
+      .yields(null, mockEvent)
+      .onSecondCall()
+      .yields(null, null);
+
+    request(app)
+      .get('/api/events/2')
+      .query({state: 'all'})
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer 12345')
+      .expect(404)
+      .end(done);
+  });
+
+  it.skip("should read teams in event", function(done) {
+    mockTokenWithPermission('READ_EVENT_ALL');
+
+    var eventId = 1;
+    var mockEvent = new EventModel({
+      _id: eventId,
+      name: 'Mock Event'
+    });
+
+    sandbox.mock(EventModel)
+      .expects('findById')
+      .chain('populate')
+      .withArgs({path: 'teamIds'})
+      .chain('exec')
+      .yields(null, mockEvent);
+
+    request(app)
+      .get('/api/events/1/teams')
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer 12345')
+      .expect(200)
+      .end(done);
+  });
+
+  it.skip("should read users in event", function(done) {
+    mockTokenWithPermission('READ_EVENT_ALL');
+
+    var eventId = 1;
+    var mockEvent = new EventModel({
+      _id: eventId,
+      name: 'Mock Event'
+    });
+
+    sandbox.mock(EventModel)
+      .expects('findById')
+      .chain('populate')
+      .withArgs({ path: "teamIds", populate: { path: "userIds" } })
+      .chain('exec')
+      .yields(null, mockEvent);
+
+    request(app)
+      .get('/api/events/1/users')
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer 12345')
+      .expect(200)
+      .end(done);
+  });
+
+  it.skip("should read teams in event", function(done) {
+    mockTokenWithPermission('READ_EVENT_ALL');
+
+    var eventId = 1;
+    var mockEvent = new EventModel({
+      _id: eventId,
+      name: 'Mock Event'
+    });
+
+    sandbox.mock(EventModel)
+      .expects('findById')
+      .chain('populate')
+      .withArgs({
+        path: 'teamIds',
+        populate: {
+          path: 'userIds'
+        }
+      })
+      .chain('exec')
+      .yields(null, mockEvent);
+
+    request(app)
+      .get('/api/events/1/teams')
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer 12345')
+      .query({populate: 'users'})
       .expect(200)
       .end(done);
   });

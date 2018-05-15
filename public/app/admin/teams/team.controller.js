@@ -1,6 +1,6 @@
-angular
-  .module('mage')
-  .controller('AdminTeamController', AdminTeamController);
+var _ = require('underscore');
+
+module.exports = AdminTeamController;
 
 AdminTeamController.$inject = ['$scope', '$uibModal', '$filter', '$location', '$routeParams', 'Team', 'Event', 'UserService'];
 
@@ -20,7 +20,7 @@ function AdminTeamController($scope, $uibModal, $filter, $location, $routeParams
     users: []
   };
 
-  UserService.getAllUsers({forceRefresh: true}).then(function(users) {
+  UserService.getAllUsers().then(function(users) {
     $scope.users = users;
     $scope.usersIdMap = _.indexBy(users, 'id');
 
@@ -121,7 +121,7 @@ function AdminTeamController($scope, $uibModal, $filter, $location, $routeParams
 
   $scope.deleteTeam = function() {
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/teams/team-delete.html',
+      template: require('./team-delete.html'),
       resolve: {
         team: function () {
           return $scope.team;

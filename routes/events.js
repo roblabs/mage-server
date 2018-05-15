@@ -3,7 +3,10 @@ module.exports = function(app, security) {
     , access = require('../access')
     , api = require('../api')
     , fs = require('fs-extra')
-    , async = require('async');
+    , async = require('async')
+    , util = require('util')
+    , fileType = require('file-type')
+    , userTransformer = require('../transformers/user');
 
   var passport = security.authentication.passport;
 
@@ -80,16 +83,16 @@ module.exports = function(app, security) {
       var primaryField = form.fields.filter(function(field) {
         return field.name === form.primaryField;
       }).shift();
-      var primaryChoices = primaryField.choices.map(function(item) {
+      var primaryChoices = primaryField ? primaryField.choices.map(function(item) {
         return item.title;
-      });
+      }) : [];
 
       var secondaryField = form.fields.filter(function(field) {
         return field.name === form.variantField;
       }).shift();
-      var secondaryChoices = secondaryField.choices.map(function(choice) {
+      var secondaryChoices = secondaryField ? secondaryField.choices.map(function(choice) {
         return choice.title;
-      });
+      }) : [];
 
       primaryChoices.reduce(function(o, primary) {
         if (form.style[primary] !== undefined && typeof form.style[primary] === 'object') {
@@ -99,7 +102,7 @@ module.exports = function(app, security) {
             if (form.style[primary][secondary] !== undefined && typeof form.style[primary][secondary] === 'object') {
               whitelistStyle[primary][secondary] = reduceStyle(form.style[primary][secondary]);
             }
-          }, o[primary]);
+          }, whitelistStyle[primary]);
         }
 
       }, whitelistStyle);
@@ -146,7 +149,7 @@ module.exports = function(app, security) {
         if (err) return next(err);
 
         res.json(events.map(function(event) {
-          return event.toObject({access: req.access});
+          return event.toObject({access: req.access, projection: req.parameters.projection});
         }));
       });
     }
@@ -165,7 +168,43 @@ module.exports = function(app, security) {
         if (err) return next(err);
         if (!event) return res.sendStatus(404);
 
-        res.json(event.toObject({access: req.access}));
+        res.json(event.toObject({access: req.access, projection: req.parameters.projection}));
+      });
+    }
+  );
+
+  app.get(
+    '/api/events/:eventId/teams',
+    passport.authenticate('bearer'),
+    authorizeAccess('READ_EVENT_ALL', 'read'),
+    determineReadAccess,
+    function (req, res, next) {
+      var populate = null;
+      if (req.query.populate) {
+        populate = req.query.populate.split(",");
+      }
+
+      Event.getTeams(req.event._id, {populate: populate}, function(err, teams) {
+        if (err) return next(err);
+
+        res.json(teams.map(function(team) {
+          return team.toObject({access: req.access});
+        }));
+      });
+    }
+  );
+
+  app.get(
+    '/api/events/:eventId/users',
+    passport.authenticate('bearer'),
+    authorizeAccess('READ_EVENT_ALL', 'read'),
+    determineReadAccess,
+    function (req, res, next) {
+      Event.getUsers(req.event._id, function(err, users) {
+        if (err) return next(err);
+
+        users = userTransformer.transform(users, {path: req.getRoot()});
+        res.json(users);
       });
     }
   );
@@ -248,13 +287,22 @@ module.exports = function(app, security) {
   app.post(
     '/api/events/:eventId/forms',
     passport.authenticate('bearer'),
-    access.authorize('UPDATE_EVENT'),
+    authorizeAccess('UPDATE_EVENT', 'update'),
     function(req, res, next) {
 
       if (!req.is('multipart/form-data')) return next();
 
       function validateForm(callback) {
-        new api.Form().validate(req.files.form, callback);
+        new api.Form().validate(req.files.form, function(err, form) {
+          if (err) return callback(err);
+
+          // Handle historic form that may contain timestamp and geometry fields
+          form.fields = form.fields.filter(function(field) {
+            return field.name !== 'timestamp' && field.name !== 'geometry';
+          });
+
+          callback(null, form);
+        });
       }
 
       function updateEvent(form, callback) {
@@ -286,7 +334,7 @@ module.exports = function(app, security) {
   app.post(
     '/api/events/:eventId/forms',
     passport.authenticate('bearer'),
-    access.authorize('UPDATE_EVENT'),
+    authorizeAccess('UPDATE_EVENT', 'update'),
     parseForm,
     function(req, res, next) {
       var form = req.form;
@@ -307,7 +355,6 @@ module.exports = function(app, security) {
           }
         ], function(err) {
           if (err) return next(err);
-          console.log('return new form', form.toJSON());
           res.status(201).json(form.toJSON());
         });
       });
@@ -317,7 +364,7 @@ module.exports = function(app, security) {
   app.put(
     '/api/events/:eventId/forms/:formId',
     passport.authenticate('bearer'),
-    access.authorize('UPDATE_EVENT'),
+    authorizeAccess('UPDATE_EVENT', 'update'),
     parseForm,
     function(req, res, next) {
       var form = req.form;
@@ -348,11 +395,11 @@ module.exports = function(app, security) {
   );
 
   app.delete(
-    '/api/events/:eventId/teams/:id',
+    '/api/events/:eventId/teams/:teamId',
     passport.authenticate('bearer'),
     authorizeAccess('UPDATE_EVENT', 'update'),
     function(req, res, next) {
-      Event.removeTeam(req.event, {id: req.params.id}, function(err, event) {
+      Event.removeTeam(req.event, req.team, function(err, event) {
         if (err) return next(err);
 
         res.json(event);
@@ -417,17 +464,62 @@ module.exports = function(app, security) {
     }
   );
 
+  app.get(
+    '/api/events/:eventId/icons/:id.json',
+    passport.authenticate('bearer'),
+    authorizeAccess('READ_EVENT_ALL', 'read'),
+    function(req, res, next) {
+      new api.Icon(req.event._id, req.params.id).getIcons(function(err, icons) {
+        if (err) return next();
+
+        async.map(icons, function(icon, done) {
+          fs.readFile(icon.path, function(err, data) {
+            if (err) return done(err);
+
+            done(null, {
+              eventId: icon.eventId,
+              formId: icon.formId,
+              primary: icon.primary,
+              variant: icon.variant,
+              icon: util.format('data:%s;base64,%s', fileType(data).mime, Buffer(data).toString('base64'))
+            });
+          });
+        }, function(err, icons) {
+          if (err) return next(err);
+
+          res.json(icons);
+        });
+      });
+    }
+  );
+
   // get icon
   app.get(
     '/api/events/:eventId/icons/:formId?/:primary?/:variant?',
     passport.authenticate('bearer'),
     authorizeAccess('READ_EVENT_ALL', 'read'),
     function(req, res, next) {
-      console.log('get icon for formId: ', req.params.formId);
-      new api.Icon(req.event._id, req.params.formId, req.params.primary, req.params.variant).getIcon(function(err, iconPath) {
-        if (err || !iconPath) return next();
+      new api.Icon(req.event._id, req.params.formId, req.params.primary, req.params.variant).getIcon(function(err, icon) {
+        if (err || !icon) return next();
 
-        res.sendFile(iconPath);
+        res.format({
+          'image/*': function() {
+            res.sendFile(icon.path);
+          },
+          'application/json': function() {
+            fs.readFile(icon.path, function(err, data) {
+              if (err) return next(err);
+
+              res.json({
+                eventId: icon.eventId,
+                formId: icon.formId,
+                primary: icon.primary,
+                variant: icon.variant,
+                icon: util.format('data:%s;base64,%s', fileType(data).mime, Buffer(data).toString('base64'))
+              });
+            });
+          }
+        });
       });
     }
   );

@@ -1,6 +1,6 @@
-angular
-  .module('mage')
-  .controller('AdminEventController', AdminEventController);
+var _ = require('underscore');
+
+module.exports = AdminEventController;
 
 AdminEventController.$inject = ['$scope', '$location', '$filter', '$routeParams', '$q', '$uibModal', 'LocalStorageService', 'UserService', 'EventService', 'Event', 'Team', 'Layer'];
 
@@ -46,12 +46,16 @@ function AdminEventController($scope, $location, $filter, $routeParams, $q, $uib
     $scope.event = result.event;
 
     var eventTeamId = _.find($scope.event.teamIds, function(teamId) {
-      return teamsById[teamId].teamEventId === $scope.event.id;
+      if (teamsById[teamId]) {
+        return teamsById[teamId].teamEventId === $scope.event.id;
+      }
     });
     eventTeam = teamsById[eventTeamId];
 
     var teamIdsInEvent = _.filter($scope.event.teamIds, function(teamId) {
-      return teamsById[teamId].teamEventId !== $scope.event.id;
+      if (teamsById[teamId]) {
+        return teamsById[teamId].teamEventId !== $scope.event.id;
+      }
     });
     var teamsInEvent = _.map(teamIdsInEvent, function(teamId) { return teamsById[teamId]; });
 
@@ -204,7 +208,7 @@ function AdminEventController($scope, $location, $filter, $routeParams, $q, $uib
   $scope.importForm = function() {
     //present upload modalInstance
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/events/event-form-upload.html',
+      template: require('./event-form-upload.html'),
       resolve: {
         event: function () {
           return $scope.event;
@@ -272,7 +276,7 @@ function AdminEventController($scope, $location, $filter, $routeParams, $q, $uib
     $event.stopPropagation();
 
     $uibModal.open({
-      templateUrl: '/app/admin/events/event-form-preview.html',
+      template: require('./event-form-preview.html'),
       resolve: {
         form: function () {
           return form;
@@ -290,7 +294,7 @@ function AdminEventController($scope, $location, $filter, $routeParams, $q, $uib
 
   $scope.deleteEvent = function() {
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/events/event-delete.html',
+      template: require('./event-delete.html'),
       resolve: {
         event: function () {
           return $scope.event;

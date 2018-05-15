@@ -1,8 +1,10 @@
-angular
-  .module('mage')
-  .directive('leaflet', leaflet);
+var _ = require('underscore')
+  , L = require('leaflet')
+  , angular = require('angular')
+  , moment = require('moment')
+  , geosearch = require('leaflet-geosearch');
 
-function leaflet() {
+module.exports = function leaflet() {
   var directive = {
     restrict: "A",
     replace: true,
@@ -11,7 +13,17 @@ function leaflet() {
   };
 
   return directive;
-}
+};
+
+// TODO this sucks but not sure there is a better way
+// Pull in leaflet icons
+require('leaflet/dist/images/marker-icon.png');
+require('leaflet/dist/images/marker-icon-2x.png');
+require('leaflet/dist/images/marker-shadow.png');
+
+require('leaflet-editable');
+require('leaflet-groupedlayercontrol');
+require('leaflet.markercluster');
 
 LeafletController.$inject = ['$rootScope', '$scope', '$interval', '$timeout', 'MapService', 'LocalStorageService', 'GeometryService'];
 
@@ -41,6 +53,8 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
   map.createPane(BASE_LAYER_PANE);
   map.getPane(BASE_LAYER_PANE).style.zIndex = 100;
 
+  L.Icon.Default.imagePath = 'images/';
+
   map.on('moveend', saveMapPosition);
 
   function saveMapPosition() {
@@ -51,9 +65,10 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
   }
 
   // toolbar  and controls config
-  new L.Control.GeoSearch({
-    provider: new L.GeoSearch.Provider.OpenStreetMap(),
-    showMarker: false
+  new geosearch.GeoSearchControl({
+    provider: new geosearch.OpenStreetMapProvider(),
+    showMarker: false,
+    autoClose: true
   }).addTo(map);
 
   new L.Control.MageFeature({
@@ -408,6 +423,7 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
     }
 
     layer.disableEdit();
+    map.removeLayer(layer);
     layers['Edit'].layer.removeLayer(layer);
 
     if (edit.feature.geometry.type === 'Point') {
@@ -428,7 +444,6 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
 
       $scope.$broadcast('feature:moved', layer.feature, layer.toGeoJSON().geometry);
     } else {
-      layer.feature.geometry = edit.geometry;
       initiateShapeDraw(edit.feature);
     }
   }
@@ -509,12 +524,15 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
 
   function initiateShapeDraw(feature) {
     var editLayer = feature.geometry.type === 'Polygon' ? map.editTools.startPolygon() : map.editTools.startPolyline();
+    editLayer.feature = feature;
+    layers['Edit'].featureIdToLayer[feature.id] = editLayer;
+
     editLayer.on('editable:drawing:commit', function(e) {
       e.layer.disableEdit();
       map.removeLayer(e.layer);
 
       var geojson = e.layer.toGeoJSON();
-      geojson.id = feature.id;
+      geojson.id = editLayer.feature.id;
 
       createGeoJsonForLayer(geojson, layers['Edit'], true);
       var newLayer = layers['Edit'].featureIdToLayer[geojson.id];
@@ -538,7 +556,7 @@ function LeafletController($rootScope, $scope, $interval, $timeout, MapService, 
       e.cancel();
     });
 
-    editLayer.on('editable:drawing:clicked', function(e) {
+    editLayer.on('editable:drawing:clicked', function() {
       if (GeometryService.featureHasIntersections(editLayer.toGeoJSON())) {
         editLayer.editor.pop();
       }

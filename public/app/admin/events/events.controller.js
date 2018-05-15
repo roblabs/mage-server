@@ -1,6 +1,6 @@
-angular
-  .module('mage')
-  .controller('AdminEventsController', AdminEventsController);
+var _ = require('underscore');
+
+module.exports = AdminEventsController;
 
 AdminEventsController.$inject = ['$scope', '$location', '$filter', '$uibModal', 'Event', 'UserService'];
 
@@ -10,7 +10,7 @@ function AdminEventsController($scope, $location, $filter, $uibModal, Event, Use
   $scope.page = 0;
   $scope.itemsPerPage = 10;
 
-  var projection = {name: true, description: true, acl: true};
+  var projection = {name: true, description: true, acl: true, complete: true};
   Event.query({state: 'all',  populate: false, projection: JSON.stringify(projection)}, function(events) {
     $scope.events = events;
   });
@@ -71,7 +71,7 @@ function AdminEventsController($scope, $location, $filter, $uibModal, Event, Use
     $event.stopPropagation();
 
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/events/event-delete.html',
+      template: require('./event-delete.html'),
       resolve: {
         event: function () {
           return event;

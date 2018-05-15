@@ -1,6 +1,7 @@
-angular
-  .module('mage')
-  .controller('AdminUserEditController', AdminUserEditController);
+var angular = require('angular')
+  , zxcvbn = require('zxcvbn');
+
+module.exports = AdminUserEditController;
 
 AdminUserEditController.$inject = ['$scope', '$filter', '$routeParams', '$location', 'Api', 'LocalStorageService', 'UserService', 'UserIconService'];
 
@@ -152,29 +153,50 @@ function AdminUserEditController($scope, $filter, $routeParams, $location, Api, 
 
     if ($scope.user.id) {
       UserService.updateUser($scope.user.id, user, function() {
-        $scope.$apply(function() {
-          $location.path('/admin/users/' + $scope.user.id);
-        });
+        $location.path('/admin/users/' + $scope.user.id);
       }, failure, progress);
     } else {
       UserService.createUser(user, function(newUser) {
-        $scope.$apply(function() {
-          $location.path('/admin/users/' + newUser.id);
-        });
+        $location.path('/admin/users/' + newUser.id);
       }, failure, progress);
     }
   };
 
-  $scope.updatePassword = function() {
-    if (!$scope.user.password) {
-      $scope.passwordStatus = {status: "error", msg: "password cannot be blank"};
-      return;
+  var passwordStrengthMap = {
+    0: {
+      type: 'danger',
+      text: 'Weak'
+    },
+    1: {
+      type: 'warning',
+      text: 'Fair'
+    },
+    2: {
+      type: 'info',
+      text: 'Good'
+    },
+    3: {
+      type: 'primary',
+      text: 'Strong'
+    },
+    4: {
+      type: 'success',
+      text: 'Excellent'
     }
+  };
 
-    if ($scope.user.password !== $scope.user.passwordconfirm) {
-      $scope.passwordStatus = {status: "error", msg: "passwords do not match"};
-      return;
-    }
+  $scope.passwordStrengthScore = 0;
+  $scope.$watch('user.password', function(password) {
+    var score = password && password.length ? zxcvbn(password, [$scope.user.username, $scope.user.displayName, $scope.user.email]).score : 0;
+    $scope.passwordStrengthScore = score + 1;
+    $scope.passwordStrengthType = passwordStrengthMap[score].type;
+    $scope.passwordStrength = passwordStrengthMap[score].text;
+  });
+
+  $scope.updatePassword = function(form) {
+    form.passwordconfirm.$setValidity("nomatch", $scope.user.password === $scope.user.passwordconfirm);
+
+    if (!form.$valid) return;
 
     var user = {
       password: $scope.user.password,
@@ -182,12 +204,13 @@ function AdminUserEditController($scope, $filter, $routeParams, $location, Api, 
     };
 
     UserService.updateUser($scope.user.id, user, function() {
-      $scope.$apply(function() {
-        $location.path('/admin/users/' + $scope.user.id);
-      });
+      $scope.user.password = "";
+      $scope.user.passwordconfirm = "";
+      form.$setPristine(true);
+      $scope.passwordStatus = {status: 'success', msg: "Password successfully updated."};
     }, function(data) {
       $scope.$apply(function() {
-        $scope.passwordStatus = {status: "error", msg: data.responseText};
+        $scope.passwordStatus = {status: "danger", msg: data.responseText};
       });
     });
   };

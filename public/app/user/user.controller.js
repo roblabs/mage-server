@@ -1,6 +1,7 @@
-angular
-  .module('mage')
-  .controller('UserController', UserController);
+var angular = require('angular')
+  , zxcvbn = require('zxcvbn');
+
+module.exports = UserController;
 
 UserController.$inject =  ['$scope', '$location', '$timeout', 'Api', 'UserService', 'user'];
 
@@ -63,9 +64,7 @@ function UserController($scope, $location, $timeout, Api, UserService, user) {
     };
 
     var complete = function() {
-      $scope.$apply(function() {
-        $scope.status("Success", "Your account information has been updated.", "alert-success");
-      });
+      $scope.status("Success", "Your account information has been updated.", "alert-success");
     };
 
     var failed = function(data) {
@@ -118,6 +117,8 @@ function UserController($scope, $location, $timeout, Api, UserService, user) {
   });
 
   $scope.updatePassword = function(form) {
+    form.newPasswordConfirm.$setValidity("nomatch", this.authentication.newPassword === this.authentication.newPasswordConfirm);
+
     if (!form.$valid) return;
 
     var authentication = {

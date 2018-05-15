@@ -12,6 +12,7 @@ module.exports = function(app, security) {
     , Event = require('../models/event')
     , Team = require('../models/team')
     , access = require('../access')
+    , turfCentroid = require('@turf/centroid')
     , geometryFormat = require('../format/geoJsonFormat')
     , observationXform = require('../transformers/observation')
     , passport = security.authentication.passport;
@@ -175,7 +176,23 @@ module.exports = function(app, security) {
   }
 
   function getIconForObservation(req, res, next) {
-    new api.Icon(req.event._id, req.observation.properties.type, req.observation.properties[req.event.form.variantField]).getIcon(function(err, icon) {
+    var form;
+    var primary;
+    var secondary;
+    if (req.observation.properties.forms.length) {
+      var formId = req.observation.properties.forms[0].formId;
+      var formDefinitions = req.event.forms.filter(function(form) {
+        return form._id === formId;
+      });
+
+      if (formDefinitions.length) {
+        form = formDefinitions[0];
+        primary = req.observation.properties.forms[0][form.primaryField];
+        secondary = req.observation.properties.forms[0][form.variantField];
+      }
+    }
+
+    new api.Icon(req.event._id, form._id, primary, secondary).getIcon(function(err, icon) {
       if (err) return next(err);
 
       req.observationIcon = icon;
@@ -288,18 +305,24 @@ module.exports = function(app, security) {
     getUserForObservation,
     getIconForObservation,
     function (req, res) {
-      var fieldsByName = {};
-      req.event.form.fields.forEach(function(field) {
-        fieldsByName[field.name] = field;
+      var formMap = {};
+      req.event.forms.forEach(function(form) {
+        var fieldsByName = {};
+        form.fields.forEach(function(field) {
+          fieldsByName[field.name] = field;
+        });
+        form.fieldsByName = fieldsByName;
+
+        formMap[form.id] = form;
       });
 
       var archive = archiver('zip');
       archive.pipe(res);
       var html = pug.renderFile('views/observation.pug', {
         event: req.event,
-        form: req.event.form,
-        fieldsByName: fieldsByName,
+        formMap: formMap,
         observation: req.observation,
+        center: turfCentroid(req.observation).geometry,
         user: req.observationUser
       });
       archive.append(html, { name: req.observation._id + '/index.html' });

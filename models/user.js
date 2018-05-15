@@ -57,7 +57,7 @@ var UserSchema = new Schema({
 
 UserSchema.method('validPassword', function(password, callback) {
   var user = this;
-  if (user.authentication.type !== 'local') return callback(null, true);
+  if (user.authentication.type !== 'local') return callback(null, false);
 
   hasher.validPassword(password, user.authentication.password, callback);
 });
@@ -95,6 +95,11 @@ UserSchema.pre('save', function(next) {
       self.constructor.findById(user._id, done);
     },
     function(existingUser, done) {
+      if (!existingUser) {
+        // Creating new user, don't check previous password
+        return done();
+      }
+
       // Verify that the new password is different from the existing password
       if(!existingUser) {
         err = new Error('User not found');

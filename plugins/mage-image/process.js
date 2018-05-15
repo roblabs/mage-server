@@ -1,13 +1,13 @@
 var config = require('./config.json')
-	, log = require('../../logger')
+  , log = require('../../logger')
   , environment = require('environment')
-	, async = require('async')
-	, path = require('path')
-	, fs = require('fs-extra')
-	, mongoose = require('mongoose')
-	, Event = require('../../models/event')
-	, Observation = require('../../models/observation')
-	, gm = require('gm');
+  , async = require('async')
+  , path = require('path')
+  , fs = require('fs-extra')
+  , mongoose = require('mongoose')
+  , Event = require('../../models/event')
+  , Observation = require('../../models/observation')
+  , gm = require('gm');
 
 var attachmentBase = environment.attachmentBaseDirectory;
 var thumbSizes = config.image.thumbSizes;
@@ -17,10 +17,10 @@ var timeout = config.image.interval * 1000;
 var observationTimes = {};
 var lastObservationTimes = {orient: {}, thumbnail: {}};
 
-var mongodbConfig = config.mongodb;
-mongoose.connect(mongodbConfig.url, {server: {poolSize: mongodbConfig.poolSize}}, function(err) {
+var mongo = environment.mongo;
+mongoose.connect(mongo.uri, mongo.options, function(err) {
   if (err) {
-    log.error('Error connecting to mongo database, please make sure mongodbConfig is running...');
+    log.error('Error connecting to mongo database, please make sure mongodb is running...');
     throw err;
   }
 });
@@ -32,7 +32,9 @@ mongoose.set('debug', function(collection, method, query, doc, options) {
 
 function processEvent(options, callback) {
   async.eachSeries(options.observations, function(observation, done) {
-    processAttachment(options.event, observation._id, observation.attachment, done);
+    async.nextTick(function() {
+      processAttachment(options.event, observation._id, observation.attachment, done);
+    });
   },
   function(err) {
     callback(err);
@@ -162,7 +164,7 @@ var processAttachments = function() {
       });
     },
     function(events, done) {
-			// aggregate results into array of attachments that have not been oriented, and orient
+      // aggregate results into array of attachments that have not been oriented, and orient
       var results = [];
       async.eachSeries(events, function(event, done) {
         var match = {
@@ -190,7 +192,7 @@ var processAttachments = function() {
     function(events, results, done) {
       async.eachSeries(results, function(result, done) {
         processEvent(result, function(err) {
-					// Update time
+          // Update time
           lastObservationTimes.orient[result.event.collectionName] = observationTimes[result.event.collectionName];
           done(err);
         });
@@ -200,8 +202,8 @@ var processAttachments = function() {
       });
     },
     function(events, done) {
-			// aggregate results into array of attachments that have been oriented
-			// but do no have all the nessecary thumbnails
+      // aggregate results into array of attachments that have been oriented
+      // but do no have all the nessecary thumbnails
       var results = [];
       async.eachSeries(events, function(event, done) {
         var match =  {

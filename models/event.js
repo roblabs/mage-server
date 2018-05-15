@@ -4,6 +4,7 @@ var mongoose = require('mongoose')
   , User = require('./user')
   , Team = require('./team')
   , api = require('../api')
+  , whitelist = require('../utilities/whitelist')
   , log = require('winston');
 
 // Creates a new Mongoose Schema object
@@ -60,7 +61,7 @@ function rolesWithPermission(permission) {
 }
 
 var FormSchema = new Schema({
-  _id: { type: Number, required: true, unique: true },
+  _id: { type: Number, required: true, sparse: true },
   name: { type: String, required: true },
   description: { type: String, required: false },
   color: {type: String, required: true},
@@ -74,7 +75,7 @@ var FormSchema = new Schema({
 
 // Creates the Schema for the Attachments object
 var EventSchema = new Schema({
-  _id: { type: Number, required: true, unique: true },
+  _id: { type: Number, required: true },
   name: { type: String, required: true, unique: true },
   description: { type: String, required: false },
   complete: { type: Boolean },
@@ -181,10 +182,6 @@ function populateUserFields(event, callback) {
 
       userFields.forEach(function(userField) {
         userField.choices = choices;
-
-        if (!userField.required && userField.type === 'dropdown') {
-          userField.choices.unshift("");
-        }
       });
     });
 
@@ -289,6 +286,13 @@ function transform(event, ret, options) {
         permissions: permissions[ret.acl[userId]]
       };
     }
+
+    // make sure only projected fields are returned
+    if (options.projection) {
+      var projection = convertProjection(options.projection);
+      projection.id = true; // always keep id
+      whitelist.project(ret, projection);
+    }
   }
 }
 
@@ -311,6 +315,11 @@ EventSchema.set("toObject", {
 // Creates the Model for the Layer Schema
 var Event = mongoose.model('Event', EventSchema);
 exports.Model = Event;
+
+// Recreate forms _id index to be sparse
+Event.collection.dropIndex('forms._id_1', function(err) {
+  console.log('Dropped index', err);
+});
 
 function convertProjection(field, keys, projection) {
   keys = keys || [];
@@ -423,6 +432,10 @@ exports.getEvents = function(options, callback) {
   var projection = {};
   if (options.projection) {
     projection = convertProjection(options.projection);
+
+    // Need these to check event access
+    projection.acl = true;
+    projection.teamIds = true;
   }
 
   Event.find(query, projection, function (err, events) {
@@ -604,7 +617,6 @@ exports.update = function(id, event, options, callback) {
     });
   }
 
-
   Event.findByIdAndUpdate(id, update, {new: true, runValidators: true, context: 'query'}, function(err, updatedEvent) {
     if (err) return callback(err);
 
@@ -677,6 +689,12 @@ exports.addTeam = function(event, team, callback) {
 };
 
 exports.removeTeam = function(event, team, callback) {
+  if (event._id === team.teamEventId) {
+    var err = new Error("Cannot remove an events team, event '" + event.name);
+    err.status = 405;
+    return callback(err);
+  }
+
   var update = {
     $pull: {
       teamIds: { $in: [mongoose.Types.ObjectId(team.id)] }
@@ -788,5 +806,58 @@ exports.removeUserFromAllAcls = function(user, callback) {
 exports.remove = function(event, callback) {
   event.remove(function(err) {
     return callback(err);
+  });
+};
+
+exports.getUsers = function(eventId, callback) {
+  var populate = {
+    path: 'teamIds',
+    populate: {
+      path: 'userIds'
+    }
+  };
+
+  Event.findById(eventId).populate(populate).exec(function(err, event) {
+    if (err) return callback(err);
+
+    if (!event) {
+      err = new Error("Event does not exist");
+      err.status = 404;
+      return callback(err);
+    }
+
+    var users = event.teamIds.reduce(function(users, team) {
+      return users.concat(team.userIds);
+    }, []);
+
+    callback(err, users);
+  });
+};
+
+exports.getTeams = function(eventId, options, callback) {
+  var projection = {
+    teamIds: 1
+  };
+
+  var populate = {
+    path: 'teamIds'
+  };
+
+  if (options.populate && options.populate.includes('users')) {
+    populate['populate'] = {
+      path: 'userIds',
+    };
+  }
+
+  Event.findById(eventId, projection).populate(populate).exec(function(err, event) {
+    if (err) return callback(err);
+
+    if (!event) {
+      err = new Error("Event does not exist");
+      err.status = 404;
+      return callback(err);
+    }
+
+    callback(err, event.teamIds);
   });
 };

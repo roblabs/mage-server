@@ -1,6 +1,7 @@
-angular
-  .module('mage')
-  .controller('AdminUserController', AdminUserController);
+var _ = require('underscore')
+  , moment = require('moment');
+
+module.exports = AdminUserController;
 
 AdminUserController.$inject = ['$scope', '$uibModal', '$filter', '$routeParams', '$location', '$q', 'LocalStorageService', 'UserService', 'LoginService', 'DeviceService', 'Team'];
 
@@ -26,7 +27,10 @@ function AdminUserController($scope, $uibModal, $filter, $routeParams, $location
   $scope.showPrevious = false;
   $scope.showNext = true;
 
-  $q.all({user: UserService.getUser($routeParams.userId, {forceRefresh: true, populate: 'roleId'}), teams: Team.query({populate: false}).$promise}).then(function(result) {
+  $q.all({
+    user: UserService.getUser($routeParams.userId),
+    teams: Team.query({populate: false}).$promise}
+  ).then(function(result) {
     $scope.user = result.user;
     $scope.avatarUrl = avatarUrl($scope.user, LocalStorageService.getToken());
     $scope.iconUrl = iconUrl($scope.user, LocalStorageService.getToken());
@@ -110,7 +114,7 @@ function AdminUserController($scope, $uibModal, $filter, $routeParams, $location
     if (user && user.avatarUrl) {
       return user.avatarUrl + "?access_token=" + token;
     } else {
-      return "img/missing_photo.png";
+      return "images/missing_photo.png";
     }
   }
 
@@ -118,7 +122,7 @@ function AdminUserController($scope, $uibModal, $filter, $routeParams, $location
     if (user && user.iconUrl) {
       return user.iconUrl + "?access_token=" + token;
     } else {
-      return "img/missing_marker.png";
+      return "images/missing_marker.png";
     }
   }
 
@@ -142,7 +146,7 @@ function AdminUserController($scope, $uibModal, $filter, $routeParams, $location
 
   $scope.deleteUser = function(user) {
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/users/user-delete.html',
+      template: require('./user-delete.html'),
       resolve: {
         user: function () {
           return user;
@@ -172,18 +176,14 @@ function AdminUserController($scope, $uibModal, $filter, $routeParams, $location
   $scope.activateUser = function(user) {
     user.active = true;
     UserService.updateUser(user.id, user, function() {
-      $scope.$apply(function() {
-        $scope.$broadcast('user:activated', user);
-      });
+      $scope.$broadcast('user:activated', user);
     });
   };
 
   $scope.deactivateUser = function (user) {
     user.active = false;
     UserService.updateUser(user.id, user, function() {
-      $scope.$apply(function() {
-        $scope.$broadcast('user:inactivated', user);
-      });
+      $scope.$broadcast('user:inactivated', user);
     });
   };
 

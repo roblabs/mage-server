@@ -1,6 +1,7 @@
-angular
-  .module('mage')
-  .factory('LocationService', LocationService);
+var _ = require('underscore')
+  , $ = require('jquery');
+
+module.exports = LocationService;
 
 LocationService.$inject = ['$q', 'Location', 'UserService', 'LocalStorageService'];
 
@@ -37,12 +38,12 @@ function LocationService($q, Location, UserService, LocalStorageService) {
       parameters.endDate = options.interval.end;
     }
 
-    UserService.getAllUsers().then(function(users) {
-      var usersById = _.indexBy(users, 'id');
+    Location.query(parameters, function(userLocations) {
+      var deferredUserLocations = [];
+      _.each(userLocations, function(userLocation) {
+        var deferredUser = $q.defer();
 
-      Location.query(parameters, function(userLocations) {
-        _.each(userLocations, function(userLocation) {
-          var user = usersById[userLocation.id];
+        UserService.getUser(userLocation.id).then(function(user) {
           if (user && user.iconUrl) {
             userLocation.locations[0].style = {
               iconUrl: '/api/users/' + user.id + '/icon?' + $.param({access_token: LocalStorageService.getToken(), _dc: user.lastUpdated})
@@ -50,8 +51,13 @@ function LocationService($q, Location, UserService, LocalStorageService) {
           }
 
           _.extend(userLocation, user);
+          deferredUser.resolve(userLocation);
         });
 
+        deferredUserLocations.push(deferredUser.promise);
+      });
+
+      $q.all(deferredUserLocations).then(function(userLocations) {
         deferred.resolve(userLocations);
       });
     });

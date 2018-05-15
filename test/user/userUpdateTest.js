@@ -11,6 +11,9 @@ var TokenModel = mongoose.model('Token');
 var User = require('../../models/user');
 var UserModel = mongoose.model('User');
 
+require('../../models/event');
+var EventModel = mongoose.model('Event');
+
 require('sinon-mongoose');
 
 describe("user update tests", function() {
@@ -79,9 +82,7 @@ describe("user update tests", function() {
         username: 'test',
         displayName: 'test',
         email: 'test@test.com',
-        phone: '000-000-0000',
-        password: 'passwordpassword',
-        passwordconfirm: 'passwordpassword'
+        phone: '000-000-0000'
       })
       .expect(200)
       .expect('Content-Type', /json/)
@@ -104,26 +105,19 @@ describe("user update tests", function() {
       }
     });
 
-    var token = {
-      _id: '1',
-      token: '12345',
-      deviceId: '123',
-      userId: {
-        populate: function(field, callback) {
-          callback(null, mockUser);
-        }
-      }
-    };
-
-    sandbox.mock(TokenModel)
+    sandbox.mock(UserModel)
       .expects('findOne')
-      .withArgs({token: "12345"})
-      .chain('populate', 'userId')
+      .withArgs({ username: 'test' })
+      .chain('populate', 'roleId')
       .chain('exec')
-      .yields(null, token);
+      .yields(null, mockUser);
+
+    sandbox.mock(UserModel.prototype)
+      .expects('validPassword')
+      .yields(null, true);
 
     request(app)
-      .put('/api/users/myself')
+      .put('/api/users/myself/password')
       .set('Accept', 'application/json')
       .set('Authorization', 'Bearer 12345')
       .send({
@@ -132,7 +126,8 @@ describe("user update tests", function() {
         email: 'test@test.com',
         phone: '000-000-0000',
         password: 'password',
-        passwordconfirm: 'passwordconfirm'
+        newPassword: 'password',
+        newPasswordConfirm: 'passwordconfirm'
       })
       .expect(400)
       .expect(function(res) {
@@ -153,26 +148,19 @@ describe("user update tests", function() {
       }
     });
 
-    var token = {
-      _id: '1',
-      token: '12345',
-      deviceId: '123',
-      userId: {
-        populate: function(field, callback) {
-          callback(null, mockUser);
-        }
-      }
-    };
-
-    sandbox.mock(TokenModel)
+    sandbox.mock(UserModel)
       .expects('findOne')
-      .withArgs({token: "12345"})
-      .chain('populate', 'userId')
+      .withArgs({ username: 'test' })
+      .chain('populate', 'roleId')
       .chain('exec')
-      .yields(null, token);
+      .yields(null, mockUser);
+
+    sandbox.mock(UserModel.prototype)
+      .expects('validPassword')
+      .yields(null, true);
 
     request(app)
-      .put('/api/users/myself')
+      .put('/api/users/myself/password')
       .set('Accept', 'application/json')
       .set('Authorization', 'Bearer 12345')
       .send({
@@ -181,7 +169,8 @@ describe("user update tests", function() {
         email: 'test@test.com',
         phone: '000-000-0000',
         password: 'password',
-        passwordconfirm: 'password'
+        newPassword: 'password',
+        newPasswordConfirm: 'password'
       })
       .expect(400)
       .expect(function(res) {
@@ -527,6 +516,154 @@ describe("user update tests", function() {
         should.exist(user);
         user.should.have.property('id').that.equals(userId.toString());
       })
+      .end(done);
+  });
+
+  it('should add recent event for admin user', function(done) {
+    mockTokenWithPermission('UPDATE_EVENT');
+
+    var mockUser = new UserModel({
+      _id: userId,
+      username: 'test',
+      displayName: 'test',
+      active: true,
+      authentication: {
+        type: 'local'
+      }
+    });
+
+    sandbox.mock(UserModel)
+      .expects('findById')
+      .chain('exec')
+      .yields(null, mockUser);
+
+    var mockEvent = new EventModel({
+      _id: 1,
+      name: 'Mock Event'
+    });
+
+    sandbox.mock(EventModel)
+      .expects('findById')
+      .twice()
+      .onFirstCall()
+      .yields(null, mockEvent)
+      .onSecondCall()
+      .yields(null, mockEvent);
+
+    sandbox.mock(UserModel)
+      .expects('findByIdAndUpdate')
+      .withArgs(userId, {recentEventIds: [1]}, {new: true})
+      .yields(null, mockUser);
+
+    request(app)
+      .post('/api/users/' + userId.toString() + '/events/1/recent' )
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer 12345')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(function(res) {
+        var user = res.body;
+        should.exist(user);
+        user.should.have.property('id').that.equals(userId.toString());
+      })
+      .end(done);
+  });
+
+  it('should add recent event for acl user', function(done) {
+    mockTokenWithPermission('NO_ADMIN_PERMISSION');
+
+    var mockUser = new UserModel({
+      _id: userId,
+      username: 'test',
+      displayName: 'test',
+      active: true,
+      authentication: {
+        type: 'local'
+      }
+    });
+
+    sandbox.mock(UserModel)
+      .expects('findById')
+      .chain('exec')
+      .yields(null, mockUser);
+
+    var eventAcl = {};
+    eventAcl[userId.toString()] = 'OWNER';
+    var mockEvent = new EventModel({
+      _id: 1,
+      name: 'Mock Event',
+      acl: eventAcl
+    });
+
+    sandbox.mock(EventModel)
+      .expects('findById')
+      .twice()
+      .onFirstCall()
+      .yields(null, mockEvent)
+      .onSecondCall()
+      .yields(null, mockEvent);
+
+    sandbox.mock(UserModel)
+      .expects('findByIdAndUpdate')
+      .withArgs(userId, {recentEventIds: [1]}, {new: true})
+      .yields(null, mockUser);
+
+    request(app)
+      .post('/api/users/' + userId.toString() + '/events/1/recent' )
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer 12345')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(function(res) {
+        var user = res.body;
+        should.exist(user);
+        user.should.have.property('id').that.equals(userId.toString());
+      })
+      .end(done);
+  });
+
+  it('should fail to add recent event for user not in event', function(done) {
+    mockTokenWithPermission('NO_ADMIN_PERMISSION');
+
+    var mockUser = new UserModel({
+      _id: userId,
+      username: 'test',
+      displayName: 'test',
+      active: true,
+      authentication: {
+        type: 'local'
+      }
+    });
+
+    sandbox.mock(UserModel)
+      .expects('findById')
+      .chain('exec')
+      .yields(null, mockUser);
+
+    var mockEvent = new EventModel({
+      _id: 1,
+      name: 'Mock Event',
+      acl: {}
+    });
+
+    sandbox.mock(EventModel)
+      .expects('findById')
+      .twice()
+      .onFirstCall()
+      .yields(null, mockEvent)
+      .onSecondCall()
+      .yields(null, mockEvent);
+
+    sandbox.mock(UserModel)
+      .expects('findByIdAndUpdate')
+      .withArgs(userId, {recentEventIds: [1]}, {new: true})
+      .yields(null, mockUser);
+
+    request(app)
+      .post('/api/users/' + userId.toString() + '/events/1/recent' )
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bearer 12345')
+      .expect(403)
       .end(done);
   });
 

@@ -1,20 +1,16 @@
-angular
-  .module('mage')
-  .directive('adminTab', adminTab);
+var _ = require('underscore');
 
-function adminTab() {
-  var directive = {
+module.exports = function adminTab() {
+  return {
     restrict: "A",
-    templateUrl: 'app/admin/admin.tab.html',
+    template: require('./admin.tab.html'),
     replace: true,
     scope: {
       tab: '=adminTab'
     },
     controller: AdminTabController
   };
-
-  return directive;
-}
+};
 
 AdminTabController.$inject = ['$scope', '$location', 'UserService', 'DeviceService'];
 
@@ -24,7 +20,7 @@ function AdminTabController($scope, $location, UserService, DeviceService) {
   };
 
   $scope.onTabChanged = function(tab) {
-    $location.path('/admin/' + tab);
+    $location.path('/admin' + tab);
   };
 
   UserService.getAllUsers().then(function(users) {

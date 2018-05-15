@@ -2,6 +2,7 @@ module.exports = function(app, security) {
   var api = require('../api')
     , log = require('winston')
     , Role = require('../models/role')
+    , Event = require('../models/event')
     , access = require('../access')
     , fs = require('fs-extra')
     , userTransformer = require('../transformers/user')
@@ -98,6 +99,29 @@ module.exports = function(app, security) {
         number: phone
       }];
     }
+
+    var password = req.param('password');
+    if (!password) {
+      return res.status(400).send(invalidResponse('password'));
+    }
+
+    var passwordconfirm = req.param('passwordconfirm');
+    if (!passwordconfirm) {
+      return res.status(400).send(invalidResponse('passwordconfirm'));
+    }
+
+    if (password !== passwordconfirm) {
+      return res.status(400).send('passwords do not match');
+    }
+
+    if (password.length < passwordLength) {
+      return res.status(400).send('password does not meet minimum length requirement of ' + passwordLength + ' characters');
+    }
+
+    user.authentication = {
+      type: 'local',
+      password: password
+    };
 
     req.newUser = user;
 
@@ -414,7 +438,15 @@ module.exports = function(app, security) {
   app.post(
     '/api/users/:userId/events/:eventId/recent',
     passport.authenticate('bearer'),
-    access.authorize('READ_USER'),
+    function(req, res, next) {
+      if (access.userHasPermission(req.user, 'UPDATE_EVENT')) {
+        next();
+      } else {
+        Event.userHasEventPermission(req.event, req.user._id, 'update', function(err, hasPermission) {
+          hasPermission ? next() : res.sendStatus(403);
+        });
+      }
+    },
     function(req, res, next) {
       new api.User().addRecentEvent(req.user, req.event, function(err, user) {
         if (err) return next(err);

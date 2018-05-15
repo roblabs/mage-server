@@ -1,6 +1,6 @@
-angular
-  .module('mage')
-  .controller('AdminDevicesController', AdminDevicesController);
+var _ = require('underscore');
+
+module.exports = AdminDevicesController;
 
 AdminDevicesController.$inject = ['$scope', '$uibModal', '$filter', '$location', 'LocalStorageService', 'DeviceService', 'UserService'];
 
@@ -87,7 +87,7 @@ function AdminDevicesController($scope, $uibModal, $filter, $location, LocalStor
     $event.stopPropagation();
 
     var modalInstance = $uibModal.open({
-      templateUrl: '/app/admin/devices/device-delete.html',
+      template: require('./device-delete.html'),
       resolve: {
         device: function () {
           return device;
@@ -97,7 +97,7 @@ function AdminDevicesController($scope, $uibModal, $filter, $location, LocalStor
         $scope.device = device;
 
         $scope.deleteDevice = function(device) {
-          DeviceService.deleteDevice(device).success(function() {
+          DeviceService.deleteDevice(device).then(function() {
             $uibModalInstance.close(device);
           });
         };
@@ -117,8 +117,7 @@ function AdminDevicesController($scope, $uibModal, $filter, $location, LocalStor
     $event.stopPropagation();
 
     device.registered = true;
-    DeviceService.updateDevice(device).success(function(data) {
-      angular.copy(data, device);
+    DeviceService.updateDevice(device).then(function() {
       $scope.saved = true;
       $scope.$broadcast('device:registered', device);
     }, function(response) {

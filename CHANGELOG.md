@@ -3,16 +3,69 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 5.0.1 (TBD)
+## 5.1.3 (TBD)
 
 * TBD
 
 ##### Features
 
 ##### Bug Fixes
-* Fix exporters to work with multiple forms
 
-## 5.0.0 (TBD)
+## [5.1.2](https://github.com/ngageoint/mage-server/releases/tag/5.1.2) (04-20-2018)
+
+##### Features
+* mage-image plugin now uses mongo environment config.
+
+##### Bug Fixes
+* Fix a bug when non admin user queries for users or teams in an event.
+* mage-image plugin now processes each attachment asynchronously.
+
+## [5.1.1](https://github.com/ngageoint/mage-server/releases/tag/5.1.1) (04-12-2018)
+
+##### Features
+* Added init.d script for mage application
+
+##### Bug Fixes
+* Allow user with event access to update recent event
+* Show default icon on web when creating an observation if no primary/secondary fields selected
+* Add favicon in webpack build
+* Don't show observation properties that are archived
+* Don't submit observation properties that are archived
+
+## [5.1.0](https://github.com/ngageoint/mage-server/releases/tag/5.1.0) (02-27-2018)
+
+##### Features
+* Upgraded min/max nodejs version 6/8.
+* Upgraded web from bower/grunt to npm/webpack.
+* Updated admin icons and styles to properly cascade defaults.
+* Added route to get teams including users for a specific event. Clients should use this as a performance boost to get only users that are part of an event.
+
+##### Bug Fixes
+* Fix bug when trying to set form line/polygon style.
+* Add line and polygon support for observation export from news feed.
+* Handle historic form import for pre 5.x forms.  This will remove the timestamp and geometry fields from the imported form definition as
+  those fields belong to the observation, not the form.
+
+## [5.0.1](https://github.com/ngageoint/mage-server/releases/tag/5.0.1) (01-30-2018)
+
+##### Features
+* Added password strength meters to admin user password change and sign up page.
+
+##### Bug Fixes
+* Fix exporters (GeoJSON, KML, Shapefile, CSV) to work with multiple forms.
+* Don't export archived fields.
+* Fixed observation download to work with multiple forms.
+* Changing the observation geometry type (point, line, polygon) in the middle of creating will not leave old shape on the map.
+* Disable observation save while editing line and polygon until edit is complete.
+* Fix race condition when loading devices and users in admin pages.
+* Force reload devices and users every time a user goes to the admin page.
+* Show required checkbox when editing historical 'type' fields.
+* Fixed regex for password and password confirm match that was causing some like password to report a mismatch.
+* Fixed a bug where new users password was checked against existing password, which of course didn't exist.
+* Modify event projection query to contain acl and teamIds which allows for event CRUD permissions check.
+* Don't allow event team to be removed from its event.
+
+## [5.0.0](https://github.com/ngageoint/mage-server/releases/tag/5.0.0) (01-23-2018)
 
 ##### Features
 * Support for multiple forms per event

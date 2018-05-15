@@ -1,6 +1,10 @@
-angular
-  .module('mage')
-  .factory('Form', Form);
+var _ = require('underscore')
+  , $ = require('jquery');
+
+module.exports = {
+  Form: Form,
+  FormIcon: FormIcon
+};
 
 Form.$inject = ['$rootScope', '$resource', 'LocalStorageService'];
 
@@ -74,4 +78,12 @@ function Form($rootScope, $resource, LocalStorageService) {
   };
 
   return Form;
+}
+
+FormIcon.$inject = ['$resource'];
+
+function FormIcon($resource) {
+  var FormIcon = $resource('/api/events/:eventId/icons/:formId.json', {});
+
+  return FormIcon;
 }
